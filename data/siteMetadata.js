@@ -5,7 +5,7 @@ const siteMetadata = {
   title: "Josh's Blog",
   author: 'Joshua Yin',
   headerTitle: "Josh's Blog",
-  description: 'A blog created with Next.js and Tailwind.css',
+  description: 'A blog where I write about the things that interest me',
   language: 'en-us',
   theme: 'system', // system, dark or light
   siteUrl: 'https://tailwind-nextjs-starter-blog.vercel.app',
