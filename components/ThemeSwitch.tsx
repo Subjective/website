@@ -12,7 +12,7 @@ const ThemeSwitch = () => {
     <button
       aria-label="Toggle Dark Mode"
       type="button"
-      className="p-1.5 mr-1 ml-1 w-8 h-8 rounded-2xl sm:ml-4 hover:bg-gray-200 dark:hover:bg-gray-700"
+      className="ml-1 mr-1 h-8 w-8 rounded-2xl p-1.5 hover:bg-gray-200 dark:hover:bg-gray-700 sm:ml-4"
       // className="p-1.5 ml-1 rounded sm:ml-2 hover:bg-gray-200 umami--click--nav-theme-switcher dark:hover:bg-gray-700"
       onClick={() => setTheme(theme === 'dark' || resolvedTheme === 'dark' ? 'light' : 'dark')}
     >
