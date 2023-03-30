@@ -2,9 +2,9 @@
 
 /** @type {import("pliny/config").PlinyConfig } */
 const siteMetadata = {
-  title: 'Next.js Starter Blog',
-  author: 'Tails Azimuth',
-  headerTitle: 'TailwindBlog',
+  title: "Josh's Blog",
+  author: 'Joshua Yin',
+  headerTitle: "Josh's Blog",
   description: 'A blog created with Next.js and Tailwind.css',
   language: 'en-us',
   theme: 'system', // system, dark or light
@@ -14,11 +14,11 @@ const siteMetadata = {
   image: '/static/images/avatar.png',
   socialBanner: '/static/images/twitter-card.png',
   email: 'address@yoursite.com',
-  github: 'https://github.com',
-  twitter: 'https://twitter.com/Twitter',
-  facebook: 'https://facebook.com',
-  youtube: 'https://youtube.com',
-  linkedin: 'https://www.linkedin.com',
+  github: 'https://github.com/Subjective',
+  twitter: 'https://twitter.com/ijaeshi',
+  facebook: 'https://facebook.com/joshua.yin.1253',
+  youtube: 'https://youtube.com/@jaeshi5844',
+  linkedin: 'https://www.linkedin.com/in/joshua-yin-a01544231',
   locale: 'en-US',
   analytics: {
     // If you want to use an analytics provider you have to add it to the
