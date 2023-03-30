@@ -8,6 +8,12 @@ import { InferGetStaticPropsType } from 'next'
 import { NewsletterForm } from 'pliny/ui/NewsletterForm'
 import { allBlogs } from 'contentlayer/generated'
 import type { Blog } from 'contentlayer/generated'
+import Greeting from '@/components/homepage/Greeting'
+import TypedBio from '@/components/homepage/TypedBio'
+import Particles from 'react-tsparticles'
+import type { Container, Engine } from 'tsparticles-engine'
+import { loadFull } from 'tsparticles'
+import { useCallback } from 'react'
 
 const MAX_DISPLAY = 5
 
@@ -19,12 +25,118 @@ export const getStaticProps = async () => {
 }
 
 export default function Home({ posts }: InferGetStaticPropsType<typeof getStaticProps>) {
+  const particlesInit = useCallback(async (engine: Engine) => {
+    console.log(engine)
+
+    // you can initialize the tsParticles instance (engine) here, adding custom shapes or presets
+    // this loads the tsparticles package bundle, it's the easiest method for getting everything ready
+    // starting from v2 you can add only the features you need reducing the bundle size
+    await loadFull(engine)
+  }, [])
+
+  const particlesLoaded = useCallback(async (container: Container | undefined) => {
+    await console.log(container)
+  }, [])
+
   return (
     <>
       <PageSEO title={siteMetadata.title} description={siteMetadata.description} />
+      <div style={{ position: 'absolute', width: '100%', left: '0', height: '80vh' }}>
+        <Particles
+          id="tsparticles"
+          init={particlesInit}
+          loaded={particlesLoaded}
+          options={{
+            fpsLimit: 120,
+            interactivity: {
+              events: {
+                onClick: {
+                  enable: true,
+                  mode: ['push'],
+                },
+                onHover: {
+                  enable: false,
+                  mode: 'repulse',
+                },
+                resize: true,
+              },
+              modes: {
+                connect: {
+                  links: {
+                    opacity: 0.1,
+                  },
+                  distance: 100,
+                  radius: 50,
+                },
+                bubble: {
+                  size: 10,
+                  duration: 0.1,
+                  distance: 100,
+                },
+                push: {
+                  quantity: 1,
+                },
+                repulse: {
+                  distance: 100,
+                  duration: 0.4,
+                },
+              },
+            },
+            particles: {
+              color: {
+                value: '#808080',
+              },
+              links: {
+                color: '#808080',
+                distance: 150,
+                enable: true,
+                opacity: 0.5,
+                width: 1,
+              },
+              collisions: {
+                enable: true,
+              },
+              move: {
+                direction: 'none',
+                enable: true,
+                outModes: {
+                  default: 'bounce',
+                },
+                random: false,
+                speed: 1,
+                straight: false,
+              },
+              number: {
+                density: {
+                  enable: true,
+                  area: 800,
+                },
+                value: 40,
+              },
+              opacity: {
+                value: 0.5,
+              },
+              shape: {
+                type: 'circle',
+              },
+              size: {
+                value: { min: 1, max: 3 },
+              },
+            },
+            detectRetina: true,
+          }}
+        />
+      </div>
       <div className="divide-y divide-gray-200 dark:divide-gray-700">
-        <div className="space-y-2 pt-6 pb-8 md:space-y-5">
-          <h1 className="text-3xl font-extrabold leading-9 tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl sm:leading-10 md:text-6xl md:leading-14">
+        <div
+          className="pt-6 pb-8 space-y-2 md:space-y-5"
+          style={{ padding: '0 5rem 0 5rem', minHeight: '40vh' }}
+        >
+          <Greeting />
+          <TypedBio />
+        </div>
+        <div className="pt-6 pb-8 space-y-2 md:space-y-5">
+          <h1 className="text-3xl font-extrabold tracking-tight leading-9 text-gray-900 sm:text-4xl sm:leading-10 md:text-6xl dark:text-gray-100 md:leading-14">
             Latest
           </h1>
           <p className="text-lg leading-7 text-gray-500 dark:text-gray-400">
@@ -48,7 +160,7 @@ export default function Home({ posts }: InferGetStaticPropsType<typeof getStatic
                     <div className="space-y-5 xl:col-span-3">
                       <div className="space-y-6">
                         <div>
-                          <h2 className="text-2xl font-bold leading-8 tracking-tight">
+                          <h2 className="text-2xl font-bold tracking-tight leading-8">
                             <Link
                               href={`/blog/${slug}`}
                               className="text-gray-900 dark:text-gray-100"
@@ -62,14 +174,14 @@ export default function Home({ posts }: InferGetStaticPropsType<typeof getStatic
                             ))}
                           </div>
                         </div>
-                        <div className="prose max-w-none text-gray-500 dark:text-gray-400">
+                        <div className="max-w-none text-gray-500 dark:text-gray-400 prose">
                           {summary}
                         </div>
                       </div>
                       <div className="text-base font-medium leading-6">
                         <Link
                           href={`/blog/${slug}`}
-                          className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
+                          className="text-primary-500 dark:hover:text-primary-400 hover:text-primary-600"
                           aria-label={`Read "${title}"`}
                         >
                           Read more &rarr;
@@ -87,7 +199,7 @@ export default function Home({ posts }: InferGetStaticPropsType<typeof getStatic
         <div className="flex justify-end text-base font-medium leading-6">
           <Link
             href="/blog"
-            className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
+            className="text-primary-500 dark:hover:text-primary-400 hover:text-primary-600"
             aria-label="All posts"
           >
             All Posts &rarr;
@@ -95,7 +207,7 @@ export default function Home({ posts }: InferGetStaticPropsType<typeof getStatic
         </div>
       )}
       {siteMetadata.newsletter.provider && (
-        <div className="flex items-center justify-center pt-4">
+        <div className="flex justify-center items-center pt-4">
           <NewsletterForm />
         </div>
       )}
