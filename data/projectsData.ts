@@ -1,17 +1,13 @@
 const projectsData = [
   {
-    title: 'A Search Engine',
-    description: `What if you could look up any information in the world? Webpages, images, videos
-    and more. Google has many features to help you find exactly what you're looking
-    for.`,
-    imgSrc: '/static/images/google.png',
-    href: 'https://www.google.com',
+    title: 'Wake and Push (2023 HackPNW Best Overall)',
+    description: `Have you ever woken up to an alarm blaring, only to immediately hit snooze and find out that it’s already past noon? Wake and Push is a unique alarm clock app that combines a traditional alarm with a physical challenge, helping users to start their day with a burst of energy and motivation.`,
+    imgSrc: '/static/images/push-and-wake.png',
+    href: 'https://devpost.com/software/wake-and-push',
   },
   {
-    title: 'The Time Machine',
-    description: `Imagine being able to travel back in time or to the future. Simple turn the knob
-    to the desired date and press "Go". No more worrying about lost keys or
-    forgotten headphones with this simple yet affordable solution.`,
+    title: 'Competitive Programming Solutions',
+    description: `A repository that contains my competitive programming solutions, written in mostly C++. The problems were taken from several competitions, including USACO, CodeForces, Kattis, and Atcoder`,
     imgSrc: '/static/images/time-machine.jpg',
     href: '/blog/the-time-machine',
   },
