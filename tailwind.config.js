@@ -31,7 +31,8 @@ module.exports = {
         sans: ['Inter', ...fontFamily.sans],
       },
       colors: {
-        primary: colors.teal,
+        primary: colors.sky,
+        secondary: colors.indigo,
         gray: colors.neutral,
       },
       typography: (theme) => ({
