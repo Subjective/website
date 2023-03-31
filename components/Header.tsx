@@ -9,11 +9,11 @@ import { useRouter } from 'next/router'
 const Header = ({ onToggleNav }: { onToggleNav: () => void }) => {
   const router = useRouter()
   return (
-    <header className="sticky top-0 z-10 py-3 h-16 bg-white/75 backdrop-blur-lg dark:bg-gray-900/75">
-      <div className="flex justify-between items-center px-3 mx-auto max-w-3xl xl:px-0 xl:max-w-5xl">
+    <header className="sticky top-0 z-10 h-16 bg-white/75 py-3 backdrop-blur-lg dark:bg-gray-900/75">
+      <div className="mx-auto flex max-w-3xl items-center justify-between px-3 xl:max-w-5xl xl:px-0">
         <div>
           <Link href="/" aria-label={siteMetadata.headerTitle}>
-            <div className="flex justify-between items-center">
+            <div className="flex items-center justify-between">
               <div className="mr-3">
                 <Logo />
               </div>
@@ -46,7 +46,7 @@ const Header = ({ onToggleNav }: { onToggleNav: () => void }) => {
           <ThemeSwitch />
           {/* <MobileNav /> */}
           <button
-            className="mr-1 ml-2 w-8 h-8 rounded sm:hidden"
+            className="ml-2 mr-1 h-8 w-8 rounded sm:hidden"
             type="button"
             aria-label="Toggle Menu"
             onClick={onToggleNav}
