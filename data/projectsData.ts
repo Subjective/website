@@ -9,7 +9,7 @@ const projectsData = [
     title: 'Competitive Programming Solutions',
     description: `A repository that contains my competitive programming solutions, written in mostly C++. The problems were taken from several competitions, including USACO, CodeForces, Kattis, and Atcoder`,
     imgSrc: '/static/images/time-machine.jpg',
-    href: '/blog/the-time-machine',
+    href: 'https://github.com/Subjective/cp',
   },
 ]
 
