@@ -19,14 +19,28 @@ export default function TypedBios() {
   return (
     <div className="sm:text-1xl text-2xl md:text-4xl">
       <ul id="bios" className="hidden">
-        <li>I'm Josh.</li>
-        <li>I'm a programmer.</li>
-        <li>I'm a programmer.</li>
-        <li>I'm a lifelong learner.</li>
-        <li>I'm a problem solver.</li>
-        <li>I'm an aspiring entrepreneur</li>
-        <li>I'm a night owl.</li>
-        <li>I'm a</li>
+        <li>
+          I'm{' '}
+          <strong>
+            <i>Josh</i>
+          </strong>
+          .
+        </li>
+        <li>
+          I'm a <i>programmer</i>.
+        </li>
+        <li>
+          I'm a <i>lifelong learner</i>.
+        </li>
+        <li>
+          I'm a <i>problem solver</i>.
+        </li>
+        <li>
+          I'm an <i>aspiring entrepreneur</i>.
+        </li>
+        <li>
+          I'm a <i>night owl</i>.
+        </li>
       </ul>
       <span ref={el} className="text-neutral-900 dark:text-neutral-200" />
     </div>
