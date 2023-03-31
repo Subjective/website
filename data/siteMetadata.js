@@ -13,7 +13,7 @@ const siteMetadata = {
   siteLogo: '/static/images/logo.png',
   image: '/static/images/avatar.png',
   socialBanner: '/static/images/twitter-card.png',
-  email: 'address@yoursite.com',
+  email: 'josh@joshyin.cc',
   github: 'https://github.com/Subjective',
   twitter: 'https://twitter.com/ijaeshi',
   facebook: 'https://facebook.com/joshua.yin.1253',
