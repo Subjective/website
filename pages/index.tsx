@@ -128,7 +128,7 @@ export default function Home({ posts }: InferGetStaticPropsType<typeof getStatic
         />
       </div>
       <div className="divide-y divide-gray-200 dark:divide-gray-700">
-        <div className="pt-6 pb-8 space-y-2 md:space-y-5">
+        <div className="space-y-2 pb-8 pt-6 md:space-y-5">
           <Greeting />
           <TypedBio />
           <div style={{ minHeight: '50vh' }}></div>
@@ -150,7 +150,7 @@ export default function Home({ posts }: InferGetStaticPropsType<typeof getStatic
                     <div className="space-y-5 xl:col-span-3">
                       <div className="space-y-6">
                         <div>
-                          <h2 className="text-2xl font-bold tracking-tight leading-8">
+                          <h2 className="text-2xl font-bold leading-8 tracking-tight">
                             <Link
                               href={`/blog/${slug}`}
                               className="text-gray-900 dark:text-gray-100"
@@ -164,14 +164,14 @@ export default function Home({ posts }: InferGetStaticPropsType<typeof getStatic
                             ))}
                           </div>
                         </div>
-                        <div className="max-w-none text-gray-500 dark:text-gray-400 prose">
+                        <div className="prose max-w-none text-gray-500 dark:text-gray-400">
                           {summary}
                         </div>
                       </div>
                       <div className="text-base font-medium leading-6">
                         <Link
                           href={`/blog/${slug}`}
-                          className="text-primary-500 dark:hover:text-primary-400 hover:text-primary-600"
+                          className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
                           aria-label={`Read "${title}"`}
                         >
                           Read more &rarr;
@@ -189,7 +189,7 @@ export default function Home({ posts }: InferGetStaticPropsType<typeof getStatic
         <div className="flex justify-end text-base font-medium leading-6">
           <Link
             href="/blog"
-            className="text-primary-500 dark:hover:text-primary-400 hover:text-primary-600"
+            className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
             aria-label="All posts"
           >
             All Posts &rarr;
@@ -197,7 +197,7 @@ export default function Home({ posts }: InferGetStaticPropsType<typeof getStatic
         </div>
       )}
       {siteMetadata.newsletter.provider && (
-        <div className="flex justify-center items-center pt-4">
+        <div className="flex items-center justify-center pt-4">
           <NewsletterForm />
         </div>
       )}

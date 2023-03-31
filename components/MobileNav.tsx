@@ -3,7 +3,7 @@ import Link from './Link'
 import clsx from 'clsx'
 
 export default function MobileNav({ navShow, onToggleNav }) {
-  let className = clsx(
+  const className = clsx(
     `sm:hidden fixed w-full h-screen inset-0 bg-gray-200 dark:bg-gray-800 opacity-95 z-50 transition-transform transform ease-in-out duration-300`,
     navShow ? 'translate-x-0' : 'translate-x-full'
   )
@@ -12,7 +12,7 @@ export default function MobileNav({ navShow, onToggleNav }) {
       <button
         type="button"
         aria-label="toggle modal"
-        className="fixed top-4 right-4 w-8 h-8 cursor-auto focus:outline-none"
+        className="fixed right-4 top-4 h-8 w-8 cursor-auto focus:outline-none"
         onClick={onToggleNav}
       >
         <svg
@@ -30,7 +30,7 @@ export default function MobileNav({ navShow, onToggleNav }) {
       </button>
       <nav className="fixed mt-8 h-full">
         {headerNavLinks.map((link) => (
-          <div key={link.title} className="py-4 px-8">
+          <div key={link.title} className="px-8 py-4">
             <Link
               href={link.href}
               className="text-2xl font-semibold tracking-wide text-gray-900 dark:text-gray-100"

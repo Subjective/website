@@ -17,7 +17,7 @@ export default function TypedBios() {
   }, [])
 
   return (
-    <div className="text-2xl md:text-4xl sm:text-1xl">
+    <div className="sm:text-1xl text-2xl md:text-4xl">
       <ul id="bios" className="hidden">
         <li>I'm Josh.</li>
         <li>I'm a programmer.</li>
