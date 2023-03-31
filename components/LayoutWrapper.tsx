@@ -18,14 +18,16 @@ const LayoutWrapper = ({ children }: Props) => {
   const onToggleNav = () => setNavShow((status) => !status)
 
   return (
-    <SectionContainer>
-      <div className={`${inter.className} flex h-screen flex-col justify-between font-sans`}>
-        <MobileNav navShow={navShow} onToggleNav={onToggleNav} />
-        <Header onToggleNav={onToggleNav} />
-        <main className="mb-auto">{children}</main>
-        <Footer />
-      </div>
-    </SectionContainer>
+    <>
+      <MobileNav navShow={navShow} onToggleNav={onToggleNav} />
+      <Header onToggleNav={onToggleNav} />
+      <SectionContainer>
+        <div className="flex flex-col justify-between">
+          <main>{children}</main>
+          <Footer />
+        </div>
+      </SectionContainer>
+    </>
   )
 }
 
