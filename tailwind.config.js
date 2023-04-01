@@ -1,6 +1,7 @@
 // @ts-check
 const { fontFamily } = require('tailwindcss/defaultTheme')
 const colors = require('tailwindcss/colors')
+const plugin = require('tailwindcss/plugin')
 
 // ../node_modules/pliny/dist/**/*.mjs is needed for monorepo setup
 /** @type {import("tailwindcss/types").Config } */
@@ -168,5 +169,22 @@ module.exports = {
       }),
     },
   },
-  plugins: [require('@tailwindcss/forms'), require('@tailwindcss/typography')],
+  plugins: [
+    require('@tailwindcss/forms'),
+    require('@tailwindcss/typography'),
+    // firefox variant
+    plugin(function({ addVariant, e, postcss }) {
+      addVariant('firefox', ({ container, separator }) => {
+        const isFirefoxRule = postcss.atRule({
+          name: '-moz-document',
+          params: 'url-prefix()',
+        })
+        isFirefoxRule.append(container.nodes)
+        container.append(isFirefoxRule)
+        isFirefoxRule.walkRules((rule) => {
+          rule.selector = `.${e(`firefox${separator}${rule.selector.slice(1)}`)}`
+        })
+      })
+    }),
+  ],
 }
