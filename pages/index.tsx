@@ -131,6 +131,10 @@ export default function Home({ posts }: InferGetStaticPropsType<typeof getStatic
       <div className="space-y-2 pb-8 pt-6 md:space-y-5" style={{ minHeight: '95vh' }}>
         <Greeting />
         <TypedBio />
+      <div
+        className="flex h-screen flex-col items-center justify-center"
+        style={{ position: 'relative' }}
+      >
       </div>
       <Link
         href={'#latest'}
@@ -185,6 +189,10 @@ export default function Home({ posts }: InferGetStaticPropsType<typeof getStatic
           </p>
         </div>
         <ul className="divide-y divide-gray-200 dark:divide-gray-700">
+        <ul
+          className="divide-y divide-gray-200 dark:divide-gray-700"
+          style={{ position: 'relative' }}
+        >
           {!posts.length && 'No posts found.'}
           {posts.slice(0, MAX_DISPLAY).map((post) => {
             const { slug, date, title, summary, tags } = post
