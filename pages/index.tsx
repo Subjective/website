@@ -57,22 +57,22 @@ export default function Home({ posts }: InferGetStaticPropsType<typeof getStatic
                 },
                 onHover: {
                   enable: false,
-                  mode: 'repulse',
+                  mode: ['bubble', 'connect'],
                 },
                 resize: true,
               },
               modes: {
                 connect: {
                   links: {
-                    opacity: 0.1,
+                    opacity: 0.9,
                   },
-                  distance: 100,
-                  radius: 50,
+                  distance: 200,
+                  radius: 200,
                 },
                 bubble: {
                   size: 10,
-                  duration: 0.1,
-                  distance: 100,
+                  duration: 0.5,
+                  distance: 50,
                 },
                 push: {
                   quantity: 1,
@@ -128,16 +128,16 @@ export default function Home({ posts }: InferGetStaticPropsType<typeof getStatic
           }}
         />
       </div>
-      <div className="space-y-2 pb-8 pt-6 md:space-y-5" style={{ minHeight: '95vh' }}>
-        <Greeting />
-        <TypedBio />
       <div
         className="flex h-screen flex-col items-center justify-center"
         style={{ position: 'relative' }}
       >
+        <div className="space-y-2 pb-8 pt-6 md:space-y-5" style={{ minHeight: '95vh' }}>
+          <Greeting />
+          <TypedBio />
+        </div>
       </div>
       <Link
-        href={'#latest'}
         style={{
           top: '90%',
           left: '50%',
@@ -145,21 +145,16 @@ export default function Home({ posts }: InferGetStaticPropsType<typeof getStatic
         }}
         aria-hidden={'true'}
         role={'button'}
-        className={'focus-invisible absolute animate-bounce'}
+        className={'focus-invisible absolute animate-bounce duration-500 hover:opacity-50'}
         onClick={(e) => {
           e.preventDefault()
+          window.location.hash = '#latest'
           const headerHeight = document.querySelector('header').offsetHeight
           const scrollPosition = postsRef.current.offsetTop - headerHeight * 1.25
           window.scrollTo({
             top: scrollPosition,
             behavior: 'smooth',
           })
-          // postsRef.current.scrollIntoView({
-          //   top: scrollPosition,
-          //   behavior: 'smooth',
-          //   // Subtract the height of the header from the scroll position
-          //   // to ensure the target element is not hidden behind the header
-          // })
         }}
       >
         <svg
@@ -188,7 +183,6 @@ export default function Home({ posts }: InferGetStaticPropsType<typeof getStatic
             {siteMetadata.description}
           </p>
         </div>
-        <ul className="divide-y divide-gray-200 dark:divide-gray-700">
         <ul
           className="divide-y divide-gray-200 dark:divide-gray-700"
           style={{ position: 'relative' }}
