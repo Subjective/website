@@ -12,7 +12,7 @@ import TypedBio from '@/components/homepage/TypedBio'
 import Particles from 'react-tsparticles'
 import type { Container, Engine } from 'tsparticles-engine'
 import { loadFull } from 'tsparticles'
-import { useCallback } from 'react'
+import { useCallback, useRef } from 'react'
 
 const MAX_DISPLAY = 5
 
@@ -36,6 +36,8 @@ export default function Home({ posts }: InferGetStaticPropsType<typeof getStatic
   const particlesLoaded = useCallback(async (container: Container | undefined) => {
     await console.log(container)
   }, [])
+
+  const postsRef = useRef<HTMLHeadingElement>()
 
   return (
     <>
@@ -126,10 +128,61 @@ export default function Home({ posts }: InferGetStaticPropsType<typeof getStatic
           }}
         />
       </div>
+      <div className="space-y-2 pb-8 pt-6 md:space-y-5" style={{ minHeight: '95vh' }}>
+        <Greeting />
+        <TypedBio />
+      </div>
+      <Link
+        href={'#latest'}
+        style={{
+          top: '90%',
+          left: '50%',
+          transform: 'translateX(-50%)',
+        }}
+        aria-hidden={'true'}
+        role={'button'}
+        className={'focus-invisible absolute animate-bounce'}
+        onClick={(e) => {
+          e.preventDefault()
+          const headerHeight = document.querySelector('header').offsetHeight
+          const scrollPosition = postsRef.current.offsetTop - headerHeight * 1.25
+          window.scrollTo({
+            top: scrollPosition,
+            behavior: 'smooth',
+          })
+          // postsRef.current.scrollIntoView({
+          //   top: scrollPosition,
+          //   behavior: 'smooth',
+          //   // Subtract the height of the header from the scroll position
+          //   // to ensure the target element is not hidden behind the header
+          // })
+        }}
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="35px"
+          height="auto"
+          fill="currentColor"
+          className="bi bi-arrow-down-circle"
+          viewBox="0 0 16 16"
+        >
+          <path
+            fillRule={'evenodd'}
+            d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v5.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V4.5z"
+          />
+        </svg>
+      </Link>
       <div className="divide-y divide-gray-200 dark:divide-gray-700">
-        <div className="space-y-2 pb-8 pt-6 md:space-y-5" style={{ minHeight: '80vh' }}>
-          <Greeting />
-          <TypedBio />
+        <div className="space-y-2 pb-8 pt-6 md:space-y-5">
+          <h1
+            className="text-3xl font-extrabold leading-9 tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl sm:leading-10 md:text-6xl md:leading-14"
+            ref={postsRef}
+          >
+            Latest
+          </h1>
+          <p className="text-lg leading-7 text-gray-500 dark:text-gray-400">
+            {siteMetadata.description}
+          </p>
         </div>
         <ul className="divide-y divide-gray-200 dark:divide-gray-700">
           {!posts.length && 'No posts found.'}
