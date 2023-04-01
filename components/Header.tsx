@@ -49,14 +49,10 @@ const Header = () => {
   return (
     <>
       <header
-        className={`sticky top-0 z-10 h-16 bg-white bg-opacity-50 py-3 backdrop-blur-lg backdrop-saturate-150 backdrop-filter firefox:bg-opacity-50 dark:bg-gray-900 dark:bg-opacity-50 dark:firefox:bg-opacity-50 ${
+        className={`sticky top-0 z-10 h-16 bg-white bg-opacity-50 py-3 backdrop-blur-lg backdrop-saturate-150 backdrop-filter dark:bg-gray-900 dark:bg-opacity-50 ${
           isTop ? 'border-none' : 'border-b border-gray-200 dark:border-gray-800 '
         }`}
       >
-        {/* <header */}
-        {/*   className={`sticky top-0 z-20 flex w-full items-center justify-between py-4  ${isTop ? 'border-none' : 'border-b border-gray-200 dark:border-gray-800' */}
-        {/*     } firefox:bg-opacity-100 dark:firefox:bg-opacity-100 bg-white bg-opacity-30 backdrop-blur-lg backdrop-saturate-150 backdrop-filter dark:bg-black dark:bg-opacity-30`} */}
-        {/* > */}
         <div className="mx-auto flex max-w-3xl items-center justify-between px-3 xl:max-w-5xl xl:px-0">
           <div className="flex items-center sm:hidden">
             <MenuButton onClick={onMenuToggle} isOpened={menuShow} />
@@ -103,7 +99,7 @@ const Header = () => {
       <div
         className={`fixed right-0 z-20 h-screen w-full transform bg-white duration-500 ease-in-out dark:bg-black sm:hidden ${
           menuShow ? 'translate-x-0' : ' -translate-x-full'
-        } bg-opacity-30 backdrop-blur-lg backdrop-saturate-150 backdrop-filter firefox:bg-opacity-100 dark:bg-opacity-30 dark:firefox:bg-opacity-100`}
+        } bg-opacity-30 backdrop-blur-lg backdrop-saturate-150 backdrop-filter dark:bg-opacity-30`}
       >
         <nav className="mt-8 h-full space-y-8">
           {headerNavLinks.map((link) => (
