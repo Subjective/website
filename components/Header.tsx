@@ -63,7 +63,7 @@ const Header = ({ onToggleNav }: { onToggleNav: () => void }) => {
           <div>
             <Link href="/" aria-label={siteMetadata.headerTitle}>
               <div className="flex justify-between items-center">
-                <div className="mr-3">
+                <div className="mr-0 sm:mr-3">
                   <Logo className="" />
                 </div>
                 {typeof siteMetadata.headerTitle === 'string' ? (
