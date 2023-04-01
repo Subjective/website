@@ -127,10 +127,9 @@ export default function Home({ posts }: InferGetStaticPropsType<typeof getStatic
         />
       </div>
       <div className="divide-y divide-gray-200 dark:divide-gray-700">
-        <div className="space-y-2 pb-8 pt-6 md:space-y-5">
+        <div className="space-y-2 pb-8 pt-6 md:space-y-5" style={{ minHeight: '80vh' }}>
           <Greeting />
           <TypedBio />
-          <div style={{ minHeight: '50vh' }}></div>
         </div>
         <ul className="divide-y divide-gray-200 dark:divide-gray-700">
           {!posts.length && 'No posts found.'}
