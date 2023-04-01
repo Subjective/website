@@ -3,7 +3,6 @@ import SectionContainer from './SectionContainer'
 import Footer from './Footer'
 import { ReactNode, useState } from 'react'
 import Header from './Header'
-import MobileNav from './MobileNav'
 
 interface Props {
   children: ReactNode
@@ -19,7 +18,6 @@ const LayoutWrapper = ({ children }: Props) => {
 
   return (
     <>
-      <MobileNav navShow={navShow} onToggleNav={onToggleNav} />
       <Header onToggleNav={onToggleNav} />
       <SectionContainer>
         <div className="flex flex-col justify-between">
