@@ -13,8 +13,10 @@ import TypedBio from '@/components/homepage/TypedBio'
 import Particles from 'react-tsparticles'
 import type { Container, Engine } from 'tsparticles-engine'
 import { loadFull } from 'tsparticles'
-import { useCallback, useRef } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 import { useRouter } from 'next/router'
+import { motion, useAnimation } from 'framer-motion'
+import { useInView } from 'react-intersection-observer'
 
 const MAX_DISPLAY = 5
 
@@ -40,7 +42,85 @@ export default function Home({ posts }: InferGetStaticPropsType<typeof getStatic
   }, [])
 
   const postsRef = useRef<HTMLHeadingElement>()
-  const router = useRouter()
+
+  const BlogListItem = ({ slug, title, tags, summary, date, siteMetadata }) => {
+    const router = useRouter()
+    const { ref, inView } = useInView()
+    const controls = useAnimation()
+
+    useEffect(() => {
+      if (inView) {
+        controls.start('visible')
+      }
+    }, [controls, inView])
+
+    const itemVariants = {
+      hidden: { opacity: 0, y: 100 },
+      visible: {
+        opacity: 1,
+        y: 0,
+        transition: { duration: 0.5, ease: 'easeOut' },
+      },
+    }
+
+    return (
+      <motion.li ref={ref} variants={itemVariants} initial="hidden" animate={controls}>
+        <article>
+          <div
+            className="clickable mb-10 space-y-2 rounded-2xl bg-gray-100/50 px-8 py-10 backdrop-blur-sm duration-300 dark:bg-gray-800/50 sm:bg-transparent sm:backdrop-blur-none sm:hover:bg-gray-100/50 sm:hover:backdrop-blur-sm sm:dark:bg-transparent sm:dark:hover:bg-gray-800/50 xl:grid xl:grid-cols-4 xl:items-baseline xl:space-y-0"
+            onClick={() => {
+              router.push(`/blog/${slug}`)
+            }}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                router.push(`/blog/${slug}`)
+              }
+            }}
+            role="link"
+            tabIndex={0}
+          >
+            <dl>
+              <dt className="sr-only">Published on</dt>
+              <dd className="text-base font-medium leading-6 text-gray-500 dark:text-gray-400">
+                <time dateTime={date}>{formatDate(date, siteMetadata.locale)}</time>
+              </dd>
+            </dl>
+            <div className="space-y-5 xl:col-span-3">
+              <div className="space-y-6">
+                <div>
+                  <h2 className="text-2xl font-bold leading-8 tracking-tight">
+                    <Link
+                      href={`/blog/${slug}`}
+                      className="text-gray-900 dark:text-gray-100"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      {title}
+                    </Link>
+                  </h2>
+                  <div className="flex flex-wrap">
+                    {tags.map((tag) => (
+                      <Tag key={tag} text={tag} />
+                    ))}
+                  </div>
+                </div>
+                <div className="prose max-w-none text-gray-500 dark:text-gray-400">{summary}</div>
+              </div>
+              <div className="text-base font-medium leading-6">
+                <Link
+                  href={`/blog/${slug}`}
+                  className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
+                  aria-label={`Read "${title}"`}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  Read more &rarr;
+                </Link>
+              </div>
+            </div>
+          </div>
+        </article>
+      </motion.li>
+    )
+  }
 
   return (
     <>
@@ -177,63 +257,7 @@ export default function Home({ posts }: InferGetStaticPropsType<typeof getStatic
           {posts.slice(0, MAX_DISPLAY).map((post) => {
             const { slug, date, title, summary, tags } = post
             return (
-              <li key={slug}>
-                <article>
-                  <div
-                    className="clickable z-0 mb-10 space-y-2 rounded-2xl bg-gray-100/50 px-8 py-10 backdrop-blur-sm duration-300 dark:bg-gray-800/50 sm:bg-transparent sm:backdrop-blur-none sm:hover:bg-gray-100/50 sm:hover:backdrop-blur-sm sm:dark:bg-transparent sm:dark:hover:bg-gray-800/50 xl:grid xl:grid-cols-4 xl:items-baseline xl:space-y-0"
-                    onClick={() => {
-                      router.push(`/blog/${slug}`)
-                    }}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') {
-                        router.push(`/blog/${slug}`)
-                      }
-                    }}
-                    role="link"
-                    tabIndex={0}
-                  >
-                    <dl>
-                      <dt className="sr-only">Published on</dt>
-                      <dd className="text-base font-medium leading-6 text-gray-500 dark:text-gray-400">
-                        <time dateTime={date}>{formatDate(date, siteMetadata.locale)}</time>
-                      </dd>
-                    </dl>
-                    <div className="space-y-5 xl:col-span-3">
-                      <div className="space-y-6">
-                        <div>
-                          <h2 className="text-2xl font-bold leading-8 tracking-tight">
-                            <Link
-                              href={`/blog/${slug}`}
-                              className="text-gray-900 dark:text-gray-100"
-                              onClick={(e) => e.stopPropagation()}
-                            >
-                              {title}
-                            </Link>
-                          </h2>
-                          <div className="flex flex-wrap">
-                            {tags.map((tag) => (
-                              <Tag key={tag} text={tag} />
-                            ))}
-                          </div>
-                        </div>
-                        <div className="prose max-w-none text-gray-500 dark:text-gray-400">
-                          {summary}
-                        </div>
-                      </div>
-                      <div className="text-base font-medium leading-6">
-                        <Link
-                          href={`/blog/${slug}`}
-                          className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
-                          aria-label={`Read "${title}"`}
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          Read more &rarr;
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
-                </article>
-              </li>
+              <BlogListItem key={slug} {...{ slug, title, tags, summary, date, siteMetadata }} />
             )
           })}
         </ul>
