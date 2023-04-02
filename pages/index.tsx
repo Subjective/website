@@ -13,6 +13,7 @@ import Particles from 'react-tsparticles'
 import type { Container, Engine } from 'tsparticles-engine'
 import { loadFull } from 'tsparticles'
 import { useCallback, useRef } from 'react'
+import { useRouter } from 'next/router'
 
 const MAX_DISPLAY = 5
 
@@ -38,6 +39,7 @@ export default function Home({ posts }: InferGetStaticPropsType<typeof getStatic
   }, [])
 
   const postsRef = useRef<HTMLHeadingElement>()
+  const router = useRouter()
 
   return (
     <>
@@ -183,17 +185,21 @@ export default function Home({ posts }: InferGetStaticPropsType<typeof getStatic
             {siteMetadata.description}
           </p>
         </div>
-        <ul
-          className="divide-y divide-gray-200 dark:divide-gray-700"
-          style={{ position: 'relative' }}
-        >
+        <ul className="pt-8" style={{ position: 'relative' }}>
           {!posts.length && 'No posts found.'}
           {posts.slice(0, MAX_DISPLAY).map((post) => {
             const { slug, date, title, summary, tags } = post
             return (
-              <li key={slug} className="py-12">
+              <li key={slug}>
                 <article>
-                  <div className="space-y-2 xl:grid xl:grid-cols-4 xl:items-baseline xl:space-y-0">
+                  <div
+                    className="clickable space-y-2 rounded-2xl px-8 py-12 duration-300 hover:bg-gray-100/50 hover:backdrop-blur-sm dark:hover:bg-gray-800/50 xl:grid xl:grid-cols-4 xl:items-baseline xl:space-y-0"
+                    onClick={() => {
+                      router.push(`/blog/${slug}`)
+                    }}
+                    role="link"
+                    tabIndex={0}
+                  >
                     <dl>
                       <dt className="sr-only">Published on</dt>
                       <dd className="text-base font-medium leading-6 text-gray-500 dark:text-gray-400">
@@ -239,7 +245,7 @@ export default function Home({ posts }: InferGetStaticPropsType<typeof getStatic
         </ul>
       </div>
       {posts.length > MAX_DISPLAY && (
-        <div className="flex justify-end text-base font-medium leading-6">
+        <div className="flex justify-end pt-4 text-base font-medium leading-6">
           <Link
             href="/blog"
             className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
