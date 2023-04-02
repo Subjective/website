@@ -195,7 +195,7 @@ export default function Home({ posts }: InferGetStaticPropsType<typeof getStatic
                     router.push(`/blog/${slug}`)
                   }}
                   onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
+                    if (e.key === 'Enter') {
                       router.push(`/blog/${slug}`)
                     }
                   }}

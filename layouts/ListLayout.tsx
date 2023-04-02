@@ -122,7 +122,7 @@ export default function ListLayout({
                     router.push(`/${path}`)
                   }}
                   onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
+                    if (e.key === 'Enter') {
                       router.push(`/${path}`)
                     }
                   }}
