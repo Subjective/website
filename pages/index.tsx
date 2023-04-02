@@ -45,7 +45,7 @@ export default function Home({ posts }: InferGetStaticPropsType<typeof getStatic
 
   const BlogListItem = ({ slug, title, tags, summary, date, siteMetadata }) => {
     const router = useRouter()
-    const { ref, inView } = useInView()
+    const { ref, inView, entry } = useInView({ threshold: 0.5, triggerOnce: true })
     const controls = useAnimation()
 
     useEffect(() => {
@@ -54,8 +54,9 @@ export default function Home({ posts }: InferGetStaticPropsType<typeof getStatic
       }
     }, [controls, inView])
 
+    const bottomInView = entry?.boundingClientRect.bottom <= entry?.rootBounds?.height
     const itemVariants = {
-      hidden: { opacity: 0, y: 100 },
+      hidden: { opacity: 0, y: bottomInView ? 100 : -100 },
       visible: {
         opacity: 1,
         y: 0,
