@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import { useRouter } from 'next/router'
 import { kebabCase } from 'pliny/utils/kebabCase'
 
 interface Props {
@@ -7,8 +6,6 @@ interface Props {
 }
 
 const Tag = ({ text }: Props) => {
-  const router = useRouter()
-
   return (
     <Link
       href={`/tags/${kebabCase(text)}`}
