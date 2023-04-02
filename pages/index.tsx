@@ -197,6 +197,11 @@ export default function Home({ posts }: InferGetStaticPropsType<typeof getStatic
                     onClick={() => {
                       router.push(`/blog/${slug}`)
                     }}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        router.push(`/blog/${slug}`)
+                      }
+                    }}
                     role="link"
                     tabIndex={0}
                   >
