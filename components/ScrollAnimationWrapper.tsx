@@ -6,12 +6,14 @@ interface ScrollAnimationWrapperProps {
   threshold?: number
   triggerOnce?: boolean
   children: React.ReactNode
+  className?: string
 }
 
 const ScrollAnimationWrapper = ({
   children,
   threshold = 0.5,
   triggerOnce = true,
+  className,
 }: ScrollAnimationWrapperProps): JSX.Element => {
   const { ref, inView, entry } = useInView({ threshold, triggerOnce })
   const controls = useAnimation()
@@ -33,7 +35,13 @@ const ScrollAnimationWrapper = ({
   }
 
   return (
-    <motion.div ref={ref} variants={itemVariants} initial="hidden" animate={controls}>
+    <motion.div
+      ref={ref}
+      variants={itemVariants}
+      initial="hidden"
+      animate={controls}
+      className={className}
+    >
       {children}
     </motion.div>
   )
