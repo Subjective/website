@@ -1,8 +1,9 @@
 import Image from './Image'
 import Link from './Link'
+import ScrollAnimationWrapper from './ScrollAnimationWrapper'
 
 const Card = ({ title, description, imgSrc, href }) => (
-  <div className="md max-w-[544px] p-4 md:w-1/2">
+  <ScrollAnimationWrapper className="md max-w-[544px] p-4 md:w-1/2">
     <div
       className={`${
         imgSrc && 'h-full'
@@ -50,7 +51,7 @@ const Card = ({ title, description, imgSrc, href }) => (
         )}
       </div>
     </div>
-  </div>
+  </ScrollAnimationWrapper>
 )
 
 export default Card
