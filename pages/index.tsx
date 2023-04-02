@@ -134,11 +134,10 @@ export default function Home({ posts }: InferGetStaticPropsType<typeof getStatic
         className="flex h-screen flex-col items-center justify-center"
         style={{ position: 'relative' }}
       >
-        <div className="space-y-2 pb-8 pt-6 md:space-y-5" style={{ minHeight: '95vh' }}>
+        <div className="space-y-2 pb-8 pt-6 md:space-y-5" style={{ minHeight: '60vh' }}>
           <Greeting />
           <TypedBio />
         </div>
-
         <button
           style={{
             top: '80%',
