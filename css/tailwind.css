@@ -62,3 +62,7 @@ input:-webkit-autofill:focus {
 .giscus-frame {
   width: 100%;
 }
+
+.clickable {
+  cursor: pointer;
+}
