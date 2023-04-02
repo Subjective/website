@@ -138,40 +138,39 @@ export default function Home({ posts }: InferGetStaticPropsType<typeof getStatic
           <Greeting />
           <TypedBio />
         </div>
-      </div>
-      <button
-        style={{
-          top: '90%',
-          left: '50%',
-          transform: 'translateX(-50%)',
-        }}
-        aria-hidden={'true'}
-        className={'focus-invisible absolute animate-bounce duration-500 hover:opacity-50'}
-        onClick={(e) => {
-          e.preventDefault()
-          window.location.hash = '#latest'
-          const headerHeight = document.querySelector('header').offsetHeight
-          const scrollPosition = postsRef.current.offsetTop - headerHeight * 1.25
-          window.scrollTo({
-            top: scrollPosition,
-            behavior: 'smooth',
-          })
-        }}
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="35px"
-          height="auto"
-          fill="currentColor"
-          className="bi bi-arrow-down-circle"
-          viewBox="0 0 16 16"
+
+        <button
+          style={{
+            top: '85%',
+          }}
+          aria-hidden={'true'}
+          className={'focus-invisible absolute animate-bounce duration-500 hover:opacity-50'}
+          onClick={(e) => {
+            e.preventDefault()
+            window.location.hash = '#latest'
+            const headerHeight = document.querySelector('header').offsetHeight
+            const scrollPosition = postsRef.current.offsetTop - headerHeight * 1.25
+            window.scrollTo({
+              top: scrollPosition,
+              behavior: 'smooth',
+            })
+          }}
         >
-          <path
-            fillRule={'evenodd'}
-            d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v5.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V4.5z"
-          />
-        </svg>
-      </button>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="35px"
+            height="auto"
+            fill="currentColor"
+            className="bi bi-arrow-down-circle"
+            viewBox="0 0 16 16"
+          >
+            <path
+              fillRule={'evenodd'}
+              d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM8.5 4.5a.5.5 0 0 0-1 0v5.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V4.5z"
+            />
+          </svg>
+        </button>
+      </div>
       <div className="divide-y divide-gray-200 dark:divide-gray-700">
         <div className="space-y-2 pb-8 pt-6 md:space-y-5">
           <h1
