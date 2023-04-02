@@ -148,7 +148,7 @@ export default function Home({ posts }: InferGetStaticPropsType<typeof getStatic
             e.preventDefault()
             window.location.hash = '#latest'
             const headerHeight = document.querySelector('header').offsetHeight
-            const scrollPosition = postsRef.current.offsetTop - headerHeight * 1.25
+            const scrollPosition = postsRef.current.offsetTop - headerHeight * 2
             window.scrollTo({
               top: scrollPosition,
               behavior: 'smooth',
