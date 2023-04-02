@@ -16,12 +16,6 @@ const Tag = ({ text }: Props) => {
       onClick={(e) => {
         e.stopPropagation()
       }}
-      onKeyDown={(e) => {
-        if (e.key === 'Enter') {
-          router.push(`/tags/${kebabCase(text)}`)
-        }
-      }}
-      role="link"
     >
       {text.split(' ').join('-')}
     </Link>
