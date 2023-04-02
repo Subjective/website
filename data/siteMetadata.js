@@ -8,7 +8,7 @@ const siteMetadata = {
   description: 'A blog where I write about the things that interest me',
   language: 'en-us',
   theme: 'system', // system, dark or light
-  siteUrl: 'https://tailwind-nextjs-starter-blog.vercel.app',
+  siteUrl: 'https://joshyin.cc',
   siteRepo: 'https://github.com/Subjective/website',
   siteLogo: '/static/images/logo.png',
   image: '/static/images/avatar.png',
@@ -18,7 +18,7 @@ const siteMetadata = {
   twitter: 'https://twitter.com/ijaeshi',
   facebook: 'https://facebook.com/joshua.yin.1253',
   youtube: 'https://youtube.com/@jaeshi5844',
-  linkedin: 'https://www.linkedin.com/in/joshua-yin-a01544231',
+  linkedin: 'https://linkedin.com/in/joshua-yin-a01544231',
   locale: 'en-US',
   analytics: {
     // If you want to use an analytics provider you have to add it to the
