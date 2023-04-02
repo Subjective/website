@@ -141,7 +141,7 @@ export default function Home({ posts }: InferGetStaticPropsType<typeof getStatic
 
         <button
           style={{
-            top: '85%',
+            top: '80%',
           }}
           aria-hidden={'true'}
           className={'focus-invisible absolute animate-bounce duration-500 hover:opacity-50'}
