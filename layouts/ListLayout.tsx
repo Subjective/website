@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/router'
 import { formatDate } from 'pliny/utils/formatDate'
 import { CoreContent } from 'pliny/utils/contentlayer'
@@ -6,8 +6,7 @@ import type { Blog } from 'contentlayer/generated'
 import Link from '@/components/Link'
 import Tag from '@/components/Tag'
 import siteMetadata from '@/data/siteMetadata'
-import { motion, useAnimation } from 'framer-motion'
-import { useInView } from 'react-intersection-observer'
+import ScrollAnimationWrapper from '@/components/ScrollAnimationWrapper'
 
 interface PaginationProps {
   totalPages: number
@@ -78,71 +77,55 @@ export default function ListLayout({
 
   const BlogListItem = ({ path, title, tags, summary, date, siteMetadata }) => {
     const router = useRouter()
-    const { ref, inView, entry } = useInView({ threshold: 0.5, triggerOnce: true })
-    const controls = useAnimation()
-
-    useEffect(() => {
-      if (inView) {
-        controls.start('visible')
-      }
-    }, [controls, inView])
-
-    const bottomInView = entry?.boundingClientRect.bottom <= entry?.rootBounds?.height
-    const itemVariants = {
-      hidden: { opacity: 0, y: bottomInView ? 100 : -100 },
-      visible: {
-        opacity: 1,
-        y: 0,
-        transition: { duration: 0.5, ease: 'easeOut' },
-      },
-    }
 
     return (
-      <motion.li ref={ref} variants={itemVariants} initial="hidden" animate={controls}>
-        <article>
-          <div
-            className="clickable mb-10 space-y-2 rounded-2xl bg-gray-100/50 px-8 py-10 backdrop-blur-sm duration-300 dark:bg-gray-800/50 sm:bg-transparent sm:backdrop-blur-none sm:hover:bg-gray-100/50 sm:hover:backdrop-blur-sm sm:dark:bg-transparent sm:dark:hover:bg-gray-800/50 xl:grid xl:grid-cols-4 xl:items-baseline xl:space-y-0"
-            onClick={() => {
-              router.push(`/${path}`)
-            }}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
+      <ScrollAnimationWrapper>
+        <li>
+          <article>
+            <div
+              className="clickable mb-10 space-y-2 rounded-2xl bg-gray-100/50 px-8 py-10 backdrop-blur-sm duration-300 dark:bg-gray-800/50 sm:bg-transparent sm:backdrop-blur-none sm:hover:bg-gray-100/50 sm:hover:backdrop-blur-sm sm:dark:bg-transparent sm:dark:hover:bg-gray-800/50 xl:grid xl:grid-cols-4 xl:items-baseline xl:space-y-0"
+              onClick={() => {
                 router.push(`/${path}`)
-              }
-            }}
-            role="link"
-            tabIndex={0}
-          >
-            <dl>
-              <dt className="sr-only">Published on</dt>
-              <dd className="text-base font-medium leading-6 text-gray-500 dark:text-gray-400">
-                <time dateTime={date}>{formatDate(date, siteMetadata.locale)}</time>
-              </dd>
-            </dl>
-            <div className="space-y-3 xl:col-span-3">
-              <div>
-                <h3 className="text-2xl font-bold leading-8 tracking-tight">
-                  <Link
-                    href={`/${path}`}
-                    className="text-gray-900 dark:text-gray-100"
-                    onClick={(e) => {
-                      e.stopPropagation()
-                    }}
-                  >
-                    {title}
-                  </Link>
-                </h3>
-                <div className="flex flex-wrap">
-                  {tags.map((tag) => (
-                    <Tag key={tag} text={tag} />
-                  ))}
+              }}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  router.push(`/${path}`)
+                }
+              }}
+              role="link"
+              tabIndex={0}
+            >
+              <dl>
+                <dt className="sr-only">Published on</dt>
+                <dd className="text-base font-medium leading-6 text-gray-500 dark:text-gray-400">
+                  <time dateTime={date}>{formatDate(date, siteMetadata.locale)}</time>
+                </dd>
+              </dl>
+              <div className="space-y-3 xl:col-span-3">
+                <div>
+                  <h3 className="text-2xl font-bold leading-8 tracking-tight">
+                    <Link
+                      href={`/${path}`}
+                      className="text-gray-900 dark:text-gray-100"
+                      onClick={(e) => {
+                        e.stopPropagation()
+                      }}
+                    >
+                      {title}
+                    </Link>
+                  </h3>
+                  <div className="flex flex-wrap">
+                    {tags.map((tag) => (
+                      <Tag key={tag} text={tag} />
+                    ))}
+                  </div>
                 </div>
+                <div className="prose max-w-none text-gray-500 dark:text-gray-400">{summary}</div>
               </div>
-              <div className="prose max-w-none text-gray-500 dark:text-gray-400">{summary}</div>
             </div>
-          </div>
-        </article>
-      </motion.li>
+          </article>
+        </li>
+      </ScrollAnimationWrapper>
     )
   }
 
