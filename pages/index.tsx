@@ -5,7 +5,6 @@ import siteMetadata from '@/data/siteMetadata'
 import { formatDate } from 'pliny/utils/formatDate'
 import { sortedBlogPost, allCoreContent } from 'pliny/utils/contentlayer'
 import { InferGetStaticPropsType } from 'next'
-import Image from 'next/image'
 import { allBlogs } from 'contentlayer/generated'
 import type { Blog } from 'contentlayer/generated'
 import Greeting from '@/components/homepage/Greeting'
@@ -13,7 +12,7 @@ import TypedBio from '@/components/homepage/TypedBio'
 import Particles from 'react-tsparticles'
 import type { Container, Engine } from 'tsparticles-engine'
 import { loadFull } from 'tsparticles'
-import { useCallback, useRef } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 import { useRouter } from 'next/router'
 import ScrollAnimationWrapper from '@/components/ScrollAnimationWrapper'
 
@@ -24,6 +23,56 @@ export const getStaticProps = async () => {
   const posts = allCoreContent(sortedPosts)
 
   return { props: { posts } }
+}
+
+function scrollToRef(
+  ref: React.MutableRefObject<HTMLElement>,
+  isButtonClicked: React.MutableRefObject<boolean>
+) {
+  window.location.hash = '#latest'
+  const headerHeight = document.querySelector('header').offsetHeight
+  const scrollPosition = ref.current.offsetTop - headerHeight * 2
+  window.scrollTo({
+    top: scrollPosition,
+    behavior: 'smooth',
+  })
+
+  // Set isButtonClicked to false when scrollToRef completes executing
+  setTimeout(() => {
+    isButtonClicked.current = false
+  }, 1000)
+}
+
+function useScrollToRefOnView(
+  ref: React.MutableRefObject<HTMLElement>,
+  isButtonClicked: React.MutableRefObject<boolean>
+) {
+  const refInView = useRef(false)
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (ref.current && !isButtonClicked.current) {
+        const refBottomOffset = ref.current.offsetTop + ref.current.offsetHeight
+        const viewBottomOffset = window.pageYOffset + window.innerHeight
+        const viewTopOffset = window.pageYOffset
+        const isRefInView =
+          refBottomOffset > viewTopOffset && ref.current.offsetTop < viewBottomOffset
+
+        if (isRefInView && !refInView.current) {
+          scrollToRef(ref, isButtonClicked)
+          refInView.current = true
+        } else if (!isRefInView && refInView.current) {
+          refInView.current = false
+        }
+      }
+    }
+
+    window.addEventListener('scroll', handleScroll)
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+    }
+  }, [ref, isButtonClicked])
 }
 
 export default function Home({ posts }: InferGetStaticPropsType<typeof getStaticProps>) {
@@ -41,6 +90,8 @@ export default function Home({ posts }: InferGetStaticPropsType<typeof getStatic
   }, [])
 
   const postsRef = useRef<HTMLHeadingElement>()
+  const isButtonClicked = useRef(false)
+  useScrollToRefOnView(postsRef, isButtonClicked)
 
   const BlogListItem = ({ slug, title, tags, summary, date, siteMetadata }) => {
     const router = useRouter()
@@ -211,13 +262,10 @@ export default function Home({ posts }: InferGetStaticPropsType<typeof getStatic
           className={'focus-invisible absolute animate-bounce duration-500 hover:opacity-50'}
           onClick={(e) => {
             e.preventDefault()
-            window.location.hash = '#latest'
-            const headerHeight = document.querySelector('header').offsetHeight
-            const scrollPosition = postsRef.current.offsetTop - headerHeight * 2
-            window.scrollTo({
-              top: scrollPosition,
-              behavior: 'smooth',
-            })
+            // scrollToRef(postsRef)
+            // setIsButtonClicked(true);
+            isButtonClicked.current = true
+            scrollToRef(postsRef, isButtonClicked)
           }}
         >
           <svg
