@@ -25,54 +25,67 @@ export const getStaticProps = async () => {
   return { props: { posts } }
 }
 
-function scrollToRef(
-  ref: React.MutableRefObject<HTMLElement>,
-  isButtonClicked: React.MutableRefObject<boolean>
-) {
-  window.location.hash = '#latest'
+function scrollToRef(ref: React.MutableRefObject<HTMLElement>) {
+  const elementId = ref.current?.id
+  window.location.hash = `#${elementId}`
   const headerHeight = document.querySelector('header').offsetHeight
   const scrollPosition = ref.current.offsetTop - headerHeight * 2
   window.scrollTo({
     top: scrollPosition,
     behavior: 'smooth',
   })
-
-  // Set isButtonClicked to false when scrollToRef completes executing
-  setTimeout(() => {
-    isButtonClicked.current = false
-  }, 1000)
 }
 
-function useScrollToRefOnView(
-  ref: React.MutableRefObject<HTMLElement>,
-  isButtonClicked: React.MutableRefObject<boolean>
+function useScrollToTopOrBottom(
+  ref: React.RefObject<HTMLElement>,
+  jumpRef?: React.RefObject<HTMLElement>,
+  timeout = 1000
 ) {
-  const refInView = useRef(false)
+  const scrollTimeout = useRef<NodeJS.Timeout>()
 
   useEffect(() => {
     const handleScroll = () => {
-      if (ref.current && !isButtonClicked.current) {
-        const refBottomOffset = ref.current.offsetTop + ref.current.offsetHeight
-        const viewBottomOffset = window.pageYOffset + window.innerHeight
-        const viewTopOffset = window.pageYOffset
-        const isRefInView =
-          refBottomOffset > viewTopOffset && ref.current.offsetTop < viewBottomOffset
-
-        if (isRefInView && !refInView.current) {
-          scrollToRef(ref, isButtonClicked)
-          refInView.current = true
-        } else if (!isRefInView && refInView.current) {
-          refInView.current = false
-        }
+      if (scrollTimeout.current) {
+        clearTimeout(scrollTimeout.current)
       }
+
+      scrollTimeout.current = setTimeout(() => {
+        const element = ref.current
+
+        if (element) {
+          const elementTop = element.getBoundingClientRect().top
+          const threshold = window.innerHeight / 2
+
+          if (elementTop >= threshold && elementTop <= window.innerHeight) {
+            window.scrollTo({
+              top: 0,
+              behavior: 'smooth',
+            })
+            history.pushState('', document.title, window.location.pathname + window.location.search)
+          } else if (elementTop >= 0 && elementTop < threshold) {
+            if (jumpRef) {
+              scrollToRef(jumpRef)
+            } else {
+              window.scrollTo({
+                top: window.innerHeight,
+                behavior: 'smooth',
+              })
+            }
+          }
+        }
+      }, timeout)
     }
 
     window.addEventListener('scroll', handleScroll)
 
     return () => {
       window.removeEventListener('scroll', handleScroll)
+
+      if (scrollTimeout.current) {
+        clearTimeout(scrollTimeout.current)
+      }
     }
-  }, [ref, isButtonClicked])
+  }, [ref, jumpRef, timeout])
 }
 
 export default function Home({ posts }: InferGetStaticPropsType<typeof getStaticProps>) {
@@ -90,8 +103,8 @@ export default function Home({ posts }: InferGetStaticPropsType<typeof getStatic
   }, [])
 
   const postsRef = useRef<HTMLHeadingElement>()
-  const isButtonClicked = useRef(false)
-  useScrollToRefOnView(postsRef, isButtonClicked)
+  const buttonRef = useRef<HTMLButtonElement>()
+  useScrollToTopOrBottom(buttonRef, postsRef, 600)
 
   const BlogListItem = ({ slug, title, tags, summary, date, siteMetadata }) => {
     const router = useRouter()
@@ -255,6 +268,7 @@ export default function Home({ posts }: InferGetStaticPropsType<typeof getStatic
           <TypedBio />
         </div>
         <button
+          ref={buttonRef}
           style={{
             top: '80%',
           }}
@@ -262,10 +276,7 @@ export default function Home({ posts }: InferGetStaticPropsType<typeof getStatic
           className={'focus-invisible absolute animate-bounce duration-500 hover:opacity-50'}
           onClick={(e) => {
             e.preventDefault()
-            // scrollToRef(postsRef)
-            // setIsButtonClicked(true);
-            isButtonClicked.current = true
-            scrollToRef(postsRef, isButtonClicked)
+            scrollToRef(postsRef)
           }}
         >
           <svg
@@ -294,6 +305,7 @@ export default function Home({ posts }: InferGetStaticPropsType<typeof getStatic
         <div className="space-y-2 pb-8 pt-6 md:space-y-5">
           <h1
             className="text-3xl font-extrabold leading-9 tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl sm:leading-10 md:text-6xl md:leading-14"
+            id="latest"
             ref={postsRef}
             style={{ position: 'relative' }}
           >
