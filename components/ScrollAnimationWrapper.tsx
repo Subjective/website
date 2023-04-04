@@ -36,6 +36,7 @@ interface ScrollAnimationWrapperProps {
   triggerOnce?: boolean
   children: React.ReactNode
   className?: string
+  yDistance?: number
 }
 
 const ScrollAnimationWrapper = ({
@@ -43,6 +44,7 @@ const ScrollAnimationWrapper = ({
   threshold = 0.25,
   triggerOnce = true,
   className,
+  yDistance = 100,
 }: ScrollAnimationWrapperProps): JSX.Element => {
   const [ref, inView, entry] = useInView({ threshold, triggerOnce })
   const [scope, animate] = useAnimate()
@@ -59,7 +61,7 @@ const ScrollAnimationWrapper = ({
           scope.current,
           {
             opacity: [0, 1],
-            y: [-100, 0],
+            y: [-yDistance, 0],
           },
           {
             duration: 0.5,
@@ -72,13 +74,13 @@ const ScrollAnimationWrapper = ({
           scope.current,
           {
             opacity: [0, 1],
-            y: [100, 0],
+            y: [yDistance, 0],
           },
           { duration: 0.5, ease: 'easeOut' }
         )
       }
     }
-  }, [inView, entry, animate, scope])
+  }, [inView, entry, animate, scope, yDistance])
 
   return (
     <motion.div initial={{ opacity: 0 }} ref={combinedRef} className={className}>
