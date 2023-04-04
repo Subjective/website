@@ -15,14 +15,11 @@ const useSyncRefs = (
     (value: Element) => {
       for (const ref of cache.current) {
         if (ref == null) {
-          console.log('ref is null')
           continue
         }
         if (typeof ref === 'function') {
-          console.log('ref is a function. Returning called function')
           ref(value)
         } else {
-          console.log('returning the value: ', value)
           ref.current = value
         }
       }
@@ -52,14 +49,19 @@ const ScrollAnimationWrapper = ({
 }: ScrollAnimationWrapperProps): JSX.Element => {
   const [ref, inView, entry] = useInView({ threshold, triggerOnce })
   const [scope, animate] = useAnimate()
+  const initiallyVisible = useRef<[boolean, boolean]>([false, false])
 
   const combinedRef = useSyncRefs(scope, ref)
 
-  const animateElement = (yTranslationVector: Array<number>, duration = 0.5) => {
+  const animateElement = (
+    yTranslationVector: Array<number>,
+    duration = 0.5,
+    transition: Array<number> = [0, 1]
+  ) => {
     animate(
       scope.current,
       {
-        opacity: [0, 1],
+        opacity: transition,
         y: yTranslationVector,
       },
       { duration: duration, ease: 'easeOut' }
@@ -67,39 +69,48 @@ const ScrollAnimationWrapper = ({
   }
 
   useEffect(() => {
-    console.log('useEffect')
+    if (entry) {
+      if (!initiallyVisible[0]) {
+        if (entry.isIntersecting) {
+          initiallyVisible[1] = true
+          // console.log('setting initially visible')
+        }
+        initiallyVisible[0] = true
+      }
+    }
+  }, [entry])
+
+  useEffect(() => {
     if (inView) {
       const bottomInView: boolean = entry.boundingClientRect.bottom <= entry.rootBounds.height
       const topInView: boolean =
         entry.boundingClientRect.top >= 0 && entry.boundingClientRect.top <= entry.rootBounds.height
       if (topInView) {
-        console.log('top in view!')
+        // console.log('top in view!')
       }
       if (bottomInView) {
-        console.log('bottom in view!')
+        // console.log('bottom in view!')
       }
 
-      if (bottomInView && topInView) {
+      if (initiallyVisible[1]) {
         if (animateInitial) {
-          console.log('Initial animiation!')
+          // console.log('Initial animation!')
           animateInitialUp ? animateElement([yDistance, 0]) : animateElement([-yDistance, 0])
+        } else {
+          animateElement([0, 0], 0, [0, 1])
         }
       } else if (bottomInView) {
-        console.log('Entering from top!')
+        // console.log('Entering from top!')
         animateElement([-yDistance, 0])
       } else {
-        console.log('Entering from bottom!')
+        // console.log('Entering from bottom!')
         animateElement([yDistance, 0])
       }
     }
   }, [inView])
 
   return (
-    <motion.div
-      initial={{ opacity: animateInitial ? 0 : 1 }}
-      ref={combinedRef}
-      className={className}
-    >
+    <motion.div initial={{ opacity: 0 }} ref={combinedRef} className={className}>
       {children}
     </motion.div>
   )
