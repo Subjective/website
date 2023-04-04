@@ -264,8 +264,10 @@ export default function Home({ posts }: InferGetStaticPropsType<typeof getStatic
         style={{ position: 'relative' }}
       >
         <div className="space-y-2 pb-8 pt-6 md:space-y-5" style={{ minHeight: '60vh' }}>
-          <Greeting />
-          <TypedBio />
+          <ScrollAnimationWrapper>
+            <Greeting />
+            <TypedBio />
+          </ScrollAnimationWrapper>
         </div>
         <button
           ref={buttonRef}
