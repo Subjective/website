@@ -3,7 +3,7 @@ import Link from './Link'
 import ScrollAnimationWrapper from './ScrollAnimationWrapper'
 
 const Card = ({ title, description, imgSrc, href }) => (
-  <ScrollAnimationWrapper className="md max-w-[544px] p-4 md:w-1/2">
+  <ScrollAnimationWrapper animateInitial={false} className="md max-w-[544px] p-4 md:w-1/2">
     <div
       className={`${
         imgSrc && 'h-full'

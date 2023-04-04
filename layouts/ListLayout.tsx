@@ -79,7 +79,7 @@ export default function ListLayout({
     const router = useRouter()
 
     return (
-      <ScrollAnimationWrapper>
+      <ScrollAnimationWrapper animateInitial={false}>
         <li>
           <article>
             <div
