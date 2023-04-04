@@ -37,6 +37,8 @@ interface ScrollAnimationWrapperProps {
   children: React.ReactNode
   className?: string
   yDistance?: number
+  animateInitial?: boolean
+  animateInitialUp?: boolean
 }
 
 const ScrollAnimationWrapper = ({
@@ -45,45 +47,59 @@ const ScrollAnimationWrapper = ({
   triggerOnce = true,
   className,
   yDistance = 100,
+  animateInitial = true,
+  animateInitialUp = false,
 }: ScrollAnimationWrapperProps): JSX.Element => {
   const [ref, inView, entry] = useInView({ threshold, triggerOnce })
   const [scope, animate] = useAnimate()
 
   const combinedRef = useSyncRefs(scope, ref)
 
+  const animateElement = (yTranslationVector: Array<number>, duration = 0.5) => {
+    animate(
+      scope.current,
+      {
+        opacity: [0, 1],
+        y: yTranslationVector,
+      },
+      { duration: duration, ease: 'easeOut' }
+    )
+  }
+
   useEffect(() => {
+    console.log('useEffect')
     if (inView) {
-      console.log("I'm in view!")
       const bottomInView: boolean = entry.boundingClientRect.bottom <= entry.rootBounds.height
+      const topInView: boolean =
+        entry.boundingClientRect.top >= 0 && entry.boundingClientRect.top <= entry.rootBounds.height
+      if (topInView) {
+        console.log('top in view!')
+      }
       if (bottomInView) {
+        console.log('bottom in view!')
+      }
+
+      if (bottomInView && topInView) {
+        if (animateInitial) {
+          console.log('Initial animiation!')
+          animateInitialUp ? animateElement([yDistance, 0]) : animateElement([-yDistance, 0])
+        }
+      } else if (bottomInView) {
         console.log('Entering from top!')
-        animate(
-          scope.current,
-          {
-            opacity: [0, 1],
-            y: [-yDistance, 0],
-          },
-          {
-            duration: 0.5,
-            ease: 'easeOut',
-          }
-        )
+        animateElement([-yDistance, 0])
       } else {
         console.log('Entering from bottom!')
-        animate(
-          scope.current,
-          {
-            opacity: [0, 1],
-            y: [yDistance, 0],
-          },
-          { duration: 0.5, ease: 'easeOut' }
-        )
+        animateElement([yDistance, 0])
       }
     }
-  }, [inView, entry, animate, scope, yDistance])
+  }, [inView])
 
   return (
-    <motion.div initial={{ opacity: 0 }} ref={combinedRef} className={className}>
+    <motion.div
+      initial={{ opacity: animateInitial ? 0 : 1 }}
+      ref={combinedRef}
+      className={className}
+    >
       {children}
     </motion.div>
   )
