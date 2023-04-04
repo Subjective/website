@@ -1,6 +1,35 @@
-import { useEffect } from 'react'
-import { motion, useAnimation } from 'framer-motion'
+import { useCallback, useEffect, useRef } from 'react'
+import { motion, useAnimate } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
+
+const useSyncRefs = (
+  ...refs: (React.MutableRefObject<Element> | ((instance: Element) => void) | null)[]
+) => {
+  const cache = useRef(refs)
+
+  useEffect(() => {
+    cache.current = refs
+  }, [refs])
+
+  return useCallback(
+    (value: Element) => {
+      for (const ref of cache.current) {
+        if (ref == null) {
+          console.log('ref is null')
+          continue
+        }
+        if (typeof ref === 'function') {
+          console.log('ref is a function. Returning called function')
+          ref(value)
+        } else {
+          console.log('returning the value: ', value)
+          ref.current = value
+        }
+      }
+    },
+    [cache]
+  )
+}
 
 interface ScrollAnimationWrapperProps {
   threshold?: number
@@ -11,37 +40,48 @@ interface ScrollAnimationWrapperProps {
 
 const ScrollAnimationWrapper = ({
   children,
-  threshold = 0.5,
+  threshold = 0.25,
   triggerOnce = true,
   className,
 }: ScrollAnimationWrapperProps): JSX.Element => {
-  const { ref, inView, entry } = useInView({ threshold, triggerOnce })
-  const controls = useAnimation()
+  const [ref, inView, entry] = useInView({ threshold, triggerOnce })
+  const [scope, animate] = useAnimate()
+
+  const combinedRef = useSyncRefs(scope, ref)
 
   useEffect(() => {
     if (inView) {
-      controls.start('visible')
+      console.log("I'm in view!")
+      const bottomInView: boolean = entry.boundingClientRect.bottom <= entry.rootBounds.height
+      if (bottomInView) {
+        console.log('Entering from top!')
+        animate(
+          scope.current,
+          {
+            opacity: [0, 1],
+            y: [-100, 0],
+          },
+          {
+            duration: 0.5,
+            ease: 'easeOut',
+          }
+        )
+      } else {
+        console.log('Entering from bottom!')
+        animate(
+          scope.current,
+          {
+            opacity: [0, 1],
+            y: [100, 0],
+          },
+          { duration: 0.5, ease: 'easeOut' }
+        )
+      }
     }
-  }, [controls, inView])
-
-  const bottomInView = entry?.boundingClientRect.bottom <= entry?.rootBounds?.height
-  const itemVariants = {
-    hidden: { opacity: 0, y: bottomInView ? 100 : -100 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.5, ease: 'easeOut' },
-    },
-  }
+  }, [inView, entry, animate, scope])
 
   return (
-    <motion.div
-      ref={ref}
-      variants={itemVariants}
-      initial="hidden"
-      animate={controls}
-      className={className}
-    >
+    <motion.div initial={{ opacity: 0 }} ref={combinedRef} className={className}>
       {children}
     </motion.div>
   )
