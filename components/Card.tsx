@@ -3,11 +3,11 @@ import Link from './Link'
 import ScrollAnimationWrapper from './ScrollAnimationWrapper'
 
 const Card = ({ title, description, imgSrc, href }) => (
-  <ScrollAnimationWrapper animateInitial={false} className="md max-w-[544px] p-4 md:w-1/2">
+  <ScrollAnimationWrapper animateInitialUp={true} className="md max-w-[544px] p-4 md:w-1/2">
     <div
       className={`${
         imgSrc && 'h-full'
-      }  overflow-hidden rounded-md border-2 border-gray-200 border-opacity-60 dark:border-gray-700`}
+      }  overflow-hidden rounded-md border-2 border-gray-200 border-opacity-60 hover:border-primary-400 dark:border-gray-700 dark:hover:border-primary-500`}
     >
       {imgSrc &&
         (href ? (
