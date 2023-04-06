@@ -36,6 +36,7 @@ interface ScrollAnimationWrapperProps {
   yDistance?: number
   animateInitial?: boolean
   animateInitialUp?: boolean
+  initialOpacity?: number
 }
 
 const ScrollAnimationWrapper = ({
@@ -46,6 +47,7 @@ const ScrollAnimationWrapper = ({
   yDistance = 100,
   animateInitial = true,
   animateInitialUp = false,
+  initialOpacity = 0,
 }: ScrollAnimationWrapperProps): JSX.Element => {
   const [ref, inView, entry] = useInView({ threshold, triggerOnce })
   const [scope, animate] = useAnimate()
@@ -110,7 +112,7 @@ const ScrollAnimationWrapper = ({
   }, [inView])
 
   return (
-    <motion.div initial={{ opacity: 0 }} ref={combinedRef} className={className}>
+    <motion.div initial={{ opacity: initialOpacity }} ref={combinedRef} className={className}>
       {children}
     </motion.div>
   )
