@@ -102,9 +102,9 @@ export default function Home({ posts }: InferGetStaticPropsType<typeof getStatic
     await console.log(container)
   }, [])
 
-  const postsRef = useRef<HTMLHeadingElement>()
+  const latestRef = useRef<HTMLHeadingElement>()
   const buttonRef = useRef<HTMLButtonElement>()
-  useScrollToTopOrBottom(buttonRef, postsRef, 600)
+  useScrollToTopOrBottom(buttonRef, latestRef, 600)
 
   const BlogListItem = ({ slug, title, tags, summary, date, siteMetadata }) => {
     const router = useRouter()
@@ -278,7 +278,7 @@ export default function Home({ posts }: InferGetStaticPropsType<typeof getStatic
           className={'focus-invisible absolute animate-bounce duration-500 hover:opacity-50'}
           onClick={(e) => {
             e.preventDefault()
-            scrollToRef(postsRef)
+            scrollToRef(latestRef)
           }}
         >
           <svg
@@ -308,7 +308,7 @@ export default function Home({ posts }: InferGetStaticPropsType<typeof getStatic
           <h1
             className="text-3xl font-extrabold leading-9 tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl sm:leading-10 md:text-6xl md:leading-14"
             id="latest"
-            ref={postsRef}
+            ref={latestRef}
             style={{ position: 'relative' }}
           >
             Latest
