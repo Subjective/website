@@ -4,6 +4,9 @@ import ProjectCard from '@/components/ProjectCard'
 import { PageSEO } from '@/components/SEO'
 
 export default function Projects() {
+  const workProjects = projectsData.filter(({ type }) => type === 'desc')
+  const sideProjects = projectsData.filter(({ type }) => type === 'repo')
+
   return (
     <>
       <PageSEO title={`Projects - ${siteMetadata.author}`} description={siteMetadata.description} />
@@ -17,8 +20,21 @@ export default function Projects() {
           </p>
         </div>
         <div className="container py-12">
+          <h3 className="mb-4 text-3xl font-extrabold leading-9 tracking-tight text-gray-900 dark:text-gray-100">
+            Work
+          </h3>
           <div className="-m-4 flex flex-wrap">
-            {projectsData.map((project) => (
+            {workProjects.map((project) => (
+              <ProjectCard key={project.title} project={project} />
+            ))}
+          </div>
+        </div>
+        <div className="container py-12">
+          <h3 className="mb-4 text-3xl font-extrabold leading-9 tracking-tight text-gray-900 dark:text-gray-100">
+            Side Projects
+          </h3>
+          <div className="-m-4 flex flex-wrap">
+            {sideProjects.map((project) => (
               <ProjectCard key={project.title} project={project} />
             ))}
           </div>
