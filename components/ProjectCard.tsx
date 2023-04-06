@@ -3,7 +3,7 @@ import Link from './Link'
 import ClickableCard from './ClickableCard'
 import ScrollAnimationWrapper from './ScrollAnimationWrapper'
 
-const Card = ({ title, description, imgSrc, href }) => (
+const ProjectCard = ({ title, description, imgSrc, href }) => (
   <ScrollAnimationWrapper
     animateInitial={true}
     animateInitialUp={true}
@@ -13,7 +13,7 @@ const Card = ({ title, description, imgSrc, href }) => (
       link={href}
       className={`${
         imgSrc && 'h-full'
-      }  overflow-hidden group rounded-md border-2 border-gray-200 border-opacity-60 hover:border-gray-300 duration-200 dark:border-gray-700 dark:hover:border-gray-600`}
+      }  group overflow-hidden rounded-md border-2 border-gray-200 border-opacity-60 duration-200 hover:border-gray-300 dark:border-gray-700 dark:hover:border-gray-600`}
     >
       {imgSrc &&
         (href ? (
@@ -22,7 +22,7 @@ const Card = ({ title, description, imgSrc, href }) => (
               <Image
                 alt={title}
                 src={imgSrc}
-                className="object-cover filter group-hover:brightness-80 object-center duration-1000 group-hover:scale-110 md:h-36 lg:h-60"
+                className="group-hover:brightness-80 object-cover object-center filter duration-1000 group-hover:scale-110 md:h-36 lg:h-60"
                 width={544}
                 height={306}
                 onClick={(e) => e.stopPropagation()}
@@ -34,7 +34,7 @@ const Card = ({ title, description, imgSrc, href }) => (
             <Image
               alt={title}
               src={imgSrc}
-              className="object-cover filter group-hover:brightness-80 object-center duration-1000 group-hover:scale-110 md:h-36 lg:h-60"
+              className="group-hover:brightness-80 object-cover object-center filter duration-1000 group-hover:scale-110 md:h-36 lg:h-60"
               width={544}
               height={306}
             />
@@ -66,4 +66,4 @@ const Card = ({ title, description, imgSrc, href }) => (
   </ScrollAnimationWrapper>
 )
 
-export default Card
+export default ProjectCard
