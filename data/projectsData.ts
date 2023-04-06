@@ -26,7 +26,7 @@ const projectsData: Project[] = [
   {
     type: 'repo',
     title: 'Personal Website',
-    imgSrc: '/static/images/time-machine.jpg',
+    imgSrc: '/static/images/joshblog.png',
     repo: 'website',
   },
 ]
