@@ -1,6 +1,8 @@
 # Josh's Blog
 
-My personal website :)
+## My personal website :)
+
+👋 Welcome to the digital realm where my personal website/portfolio/blog repository resides! 🌐 A place where code 💻 and creativity 🎨 combine to form an online sanctuary that captures the essence of who I am.
 
 ## Tech stack
 
