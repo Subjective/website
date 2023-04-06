@@ -77,42 +77,42 @@ export default function ListLayout({
     initialDisplayPosts.length > 0 && !searchValue ? initialDisplayPosts : filteredBlogPosts
 
   const BlogListItem = ({ path, title, tags, summary, date, siteMetadata }) => (
-      <li>
-        <article>
-          <ClickableCard
-            link={`/${path}`}
-            className="mb-10 space-y-2 rounded-2xl bg-gray-100/50 px-8 py-10 backdrop-blur-sm duration-300 dark:bg-gray-800/50 sm:bg-transparent sm:backdrop-blur-none sm:hover:bg-gray-100/50 sm:hover:backdrop-blur-sm sm:dark:bg-transparent sm:dark:hover:bg-gray-800/50 xl:grid xl:grid-cols-4 xl:items-baseline xl:space-y-0"
-          >
-            <dl>
-              <dt className="sr-only">Published on</dt>
-              <dd className="text-base font-medium leading-6 text-gray-500 dark:text-gray-400">
-                <time dateTime={date}>{formatDate(date, siteMetadata.locale)}</time>
-              </dd>
-            </dl>
-            <div className="space-y-3 xl:col-span-3">
-              <div>
-                <h3 className="text-2xl font-bold leading-8 tracking-tight">
-                  <Link
-                    href={`/${path}`}
-                    className="text-gray-900 dark:text-gray-100"
-                    onClick={(e) => {
-                      e.stopPropagation()
-                    }}
-                  >
-                    {title}
-                  </Link>
-                </h3>
-                <div className="flex flex-wrap">
-                  {tags.map((tag) => (
-                    <Tag key={tag} text={tag} />
-                  ))}
-                </div>
+    <li>
+      <article>
+        <ClickableCard
+          link={`/${path}`}
+          className="mb-10 space-y-2 rounded-2xl bg-gray-100/50 px-8 py-10 backdrop-blur-sm duration-300 dark:bg-gray-800/50 sm:bg-transparent sm:backdrop-blur-none sm:hover:bg-gray-100/50 sm:hover:backdrop-blur-sm sm:dark:bg-transparent sm:dark:hover:bg-gray-800/50 xl:grid xl:grid-cols-4 xl:items-baseline xl:space-y-0"
+        >
+          <dl>
+            <dt className="sr-only">Published on</dt>
+            <dd className="text-base font-medium leading-6 text-gray-500 dark:text-gray-400">
+              <time dateTime={date}>{formatDate(date, siteMetadata.locale)}</time>
+            </dd>
+          </dl>
+          <div className="space-y-3 xl:col-span-3">
+            <div>
+              <h3 className="text-2xl font-bold leading-8 tracking-tight">
+                <Link
+                  href={`/${path}`}
+                  className="text-gray-900 dark:text-gray-100"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                  }}
+                >
+                  {title}
+                </Link>
+              </h3>
+              <div className="flex flex-wrap">
+                {tags.map((tag) => (
+                  <Tag key={tag} text={tag} />
+                ))}
               </div>
-              <div className="prose max-w-none text-gray-500 dark:text-gray-400">{summary}</div>
             </div>
-          </ClickableCard>
-        </article>
-      </li>
+            <div className="prose max-w-none text-gray-500 dark:text-gray-400">{summary}</div>
+          </div>
+        </ClickableCard>
+      </article>
+    </li>
   )
 
   return (
@@ -154,8 +154,8 @@ export default function ListLayout({
           {displayPosts.map((post) => {
             const { path, date, title, summary, tags } = post
             return (
-              <ScrollAnimationWrapper animateInitial={true} animateInitialUp={true}>
-                <BlogListItem key={path} {...{ path, title, tags, summary, date, siteMetadata }} />
+              <ScrollAnimationWrapper key={path} animateInitial={true} animateInitialUp={true}>
+                <BlogListItem {...{ path, title, tags, summary, date, siteMetadata }} />
               </ScrollAnimationWrapper>
             )
           })}
