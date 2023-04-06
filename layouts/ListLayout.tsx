@@ -77,7 +77,6 @@ export default function ListLayout({
     initialDisplayPosts.length > 0 && !searchValue ? initialDisplayPosts : filteredBlogPosts
 
   const BlogListItem = ({ path, title, tags, summary, date, siteMetadata }) => (
-    <ScrollAnimationWrapper animateInitialUp={true}>
       <li>
         <article>
           <ClickableCard
@@ -114,7 +113,6 @@ export default function ListLayout({
           </ClickableCard>
         </article>
       </li>
-    </ScrollAnimationWrapper>
   )
 
   return (
@@ -156,7 +154,9 @@ export default function ListLayout({
           {displayPosts.map((post) => {
             const { path, date, title, summary, tags } = post
             return (
-              <BlogListItem key={path} {...{ path, title, tags, summary, date, siteMetadata }} />
+              <ScrollAnimationWrapper animateInitial={true} animateInitialUp={true}>
+                <BlogListItem key={path} {...{ path, title, tags, summary, date, siteMetadata }} />
+              </ScrollAnimationWrapper>
             )
           })}
         </ul>
