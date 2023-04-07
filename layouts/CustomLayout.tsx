@@ -64,14 +64,13 @@ export default function CustomLayout({
               <div>
                 <PageTitle>{title}</PageTitle>
               </div>
-
               <span className="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">
                 {readingTime.text}
               </span>
             </div>
           </header>
           <div className="grid-rows-[auto_1fr] divide-y divide-gray-200 pb-8 dark:divide-gray-700 xl:grid xl:grid-cols-5 xl:gap-x-6 xl:divide-y-0">
-            <div className="xl:sticky xl:top-12">
+            <div className="xl:sticky xl:top-12 xl:col-start-1 xl:row-start-1">
               {/* Authors */}
               <dl className="pb-10 pt-6 xl:border-b xl:border-gray-200 xl:pt-11 xl:dark:border-gray-700">
                 <dt className="sr-only">Authors</dt>
@@ -108,46 +107,43 @@ export default function CustomLayout({
                   </ul>
                 </dd>
               </dl>
-              {/* Tags and Article Navigation */}
-              <div>
-                <div className="divide-gray-200 text-sm font-medium leading-5 dark:divide-gray-700 xl:col-start-1 xl:row-start-2 xl:divide-y">
-                  {tags && (
-                    <div className="py-4 xl:py-8">
-                      <h2 className="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">
-                        Tags
-                      </h2>
-                      <div className="flex flex-wrap">
-                        {tags.map((tag) => (
-                          <Tag key={tag} text={tag} />
-                        ))}
+              <div className="hidden divide-gray-200 text-sm font-medium leading-5 dark:divide-gray-700 xl:col-start-1 xl:row-start-2 xl:block xl:divide-y">
+                {tags && (
+                  <div className="py-4 xl:py-8">
+                    <h2 className="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                      Tags
+                    </h2>
+                    <div className="flex flex-wrap">
+                      {tags.map((tag) => (
+                        <Tag key={tag} text={tag} />
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {(next || prev) && (
+                  <div className="flex justify-between py-4 xl:block xl:space-y-8 xl:py-8">
+                    {prev && (
+                      <div>
+                        <h2 className="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                          Previous Article
+                        </h2>
+                        <div className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400">
+                          <Link href={`/${prev.path}`}>{prev.title}</Link>
+                        </div>
                       </div>
-                    </div>
-                  )}
-                  {(next || prev) && (
-                    <div className="flex justify-between py-4 xl:block xl:space-y-8 xl:py-8">
-                      {prev && (
-                        <div>
-                          <h2 className="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">
-                            Previous Article
-                          </h2>
-                          <div className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400">
-                            <Link href={`/${prev.path}`}>{prev.title}</Link>
-                          </div>
+                    )}
+                    {next && (
+                      <div>
+                        <h2 className="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                          Next Article
+                        </h2>
+                        <div className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400">
+                          <Link href={`/${next.path}`}>{next.title}</Link>
                         </div>
-                      )}
-                      {next && (
-                        <div>
-                          <h2 className="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">
-                            Next Article
-                          </h2>
-                          <div className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400">
-                            <Link href={`/${next.path}`}>{next.title}</Link>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  )}
-                </div>
+                      </div>
+                    )}
+                  </div>
+                )}
                 <div className="pt-4 xl:pt-8">
                   <Link
                     href={`/${basePath}`}
@@ -183,6 +179,55 @@ export default function CustomLayout({
                 </div>
               )}
             </div>
+            {/* Tags and Article Navigation */}
+            <div className="divide-gray-200 text-sm font-medium leading-5 dark:divide-gray-700 xl:col-start-1 xl:row-start-2 xl:hidden xl:divide-y">
+              {tags && (
+                <div className="py-4 xl:py-8">
+                  <h2 className="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                    Tags
+                  </h2>
+                  <div className="flex flex-wrap">
+                    {tags.map((tag) => (
+                      <Tag key={tag} text={tag} />
+                    ))}
+                  </div>
+                </div>
+              )}
+              {(next || prev) && (
+                <div className="flex justify-between py-4 xl:block xl:space-y-8 xl:py-8">
+                  {prev && (
+                    <div>
+                      <h2 className="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                        Previous Article
+                      </h2>
+                      <div className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400">
+                        <Link href={`/${prev.path}`}>{prev.title}</Link>
+                      </div>
+                    </div>
+                  )}
+                  {next && (
+                    <div>
+                      <h2 className="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                        Next Article
+                      </h2>
+                      <div className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400">
+                        <Link href={`/${next.path}`}>{next.title}</Link>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+              <div className="pt-4 xl:pt-8">
+                <Link
+                  href={`/${basePath}`}
+                  className="text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
+                  aria-label="Back to the blog"
+                >
+                  &larr; Back to the blog
+                </Link>
+              </div>
+            </div>
+
             <div className="sticky top-12 hidden xl:col-start-5 xl:row-start-1 xl:block">
               <TableOfContents toc={toc as unknown as Toc} />
             </div>
