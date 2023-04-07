@@ -45,7 +45,7 @@ const TableOfContents = ({
   console.log('active anchor: ', activeAnchor)
   return (
     <>
-      <ul className={'text-dark-400 sticky top-12 py-8 text-sm'}>
+      <ul className={'text-dark-400 py-8 text-sm '}>
         <h2 className={'mb-2 text-sm font-bold uppercase tracking-wider text-primary-500'}>
           Table of Contents
         </h2>

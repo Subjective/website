@@ -183,7 +183,9 @@ export default function CustomLayout({
                 </div>
               )}
             </div>
-            <TableOfContents toc={toc as unknown as Toc} />
+            <div className="sticky top-12 hidden xl:col-start-5 xl:row-start-1 xl:block">
+              <TableOfContents toc={toc as unknown as Toc} />
+            </div>
           </div>
         </div>
       </article>
