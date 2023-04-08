@@ -41,8 +41,6 @@ const TableOfContents = ({
   const normalStyle = 'text-gray-400 hover:text-gray-900 dark:hover:text-gray-100'
 
   if (!filteredToc.length) return null
-  console.log(filteredToc)
-  console.log('active anchor: ', activeAnchor)
   return (
     <>
       <ul className={'text-dark-400 py-8 text-sm '}>
