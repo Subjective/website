@@ -57,11 +57,6 @@ const TableOfContents = ({
                 className={`${
                   activeAnchor === url.slice(1) ? activeStyle : normalStyle
                 } block py-1`}
-                onClick={(e) => {
-                  e.preventDefault()
-                  window.location.hash = url
-                  document.getElementById(url.slice(1)).scrollIntoView({ behavior: 'smooth' })
-                }}
               >
                 {value}
               </Link>
