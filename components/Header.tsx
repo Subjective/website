@@ -49,9 +49,13 @@ const Header = () => {
   return (
     <>
       <header
-        className={`sticky top-0 z-10 h-16 bg-white bg-opacity-50 py-3 backdrop-blur-lg backdrop-saturate-150 backdrop-filter dark:bg-gray-900 dark:bg-opacity-50 ${
+        className={`sticky top-0 z-10 h-16 bg-white bg-opacity-50 backdrop-blur-lg backdrop-saturate-150 backdrop-filter dark:bg-gray-900 dark:bg-opacity-50 ${
           isTop ? 'border-none' : 'border-b border-gray-200 dark:border-gray-800 '
         }`}
+        style={{
+          paddingTop: '0.60rem',
+          paddingBottom: '0.60rem',
+        }}
       >
         <div className="mx-auto flex max-w-3xl items-center justify-between px-3 xl:max-w-5xl xl:px-0">
           <div className="flex items-center sm:hidden">
