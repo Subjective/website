@@ -1,10 +1,10 @@
 import React from 'react'
 
 const useActiveAnchor = (itemIds: string[]) => {
-  let [activeAnchor, setActiveAnchor] = React.useState<string | undefined>(undefined)
+  const [activeAnchor, setActiveAnchor] = React.useState<string | undefined>(undefined)
   React.useEffect(() => {
     if (!itemIds.length) {
-      return () => { }
+      return () => {}
     }
     function onScroll() {
       const viewport = window.innerHeight
@@ -21,7 +21,7 @@ const useActiveAnchor = (itemIds: string[]) => {
       let low = 0,
         high = heights.length
       while (low < high) {
-        let mid = low + Math.floor((high - low) / 2)
+        const mid = low + Math.floor((high - low) / 2)
         if (heights[mid].top >= target) {
           high = mid
         } else {
