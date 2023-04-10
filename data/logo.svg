@@ -1,3 +1,35 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid meet" viewBox="344.5639097744361 330.27819548872174 111.73684210526318 91.21804511278197" width="53.87" height="43.61"><defs><path d="M453.3 331.28L453.3 359.85L388.64 418.5L388.64 388.42L453.3 331.28Z" id="aFZf6T5ED"></path><linearGradient id="gradientb2ThqnP5Op" gradientUnits="userSpaceOnUse" x1="420.97" y1="331.28" x2="420.97" y2="418.5"><stop style="stop-color: #06b6d4;stop-opacity: 1" offset="0%"></stop><stop style="stop-color: #67e8f9;stop-opacity: 1" offset="100%"></stop></linearGradient><path d="M410.23 331.28L410.23 359.85L345.56 418.5L345.56 388.42L410.23 331.28Z" id="a9fehgwfM"></path><linearGradient id="gradientk1wNV9Ostb" gradientUnits="userSpaceOnUse" x1="377.89" y1="331.28" x2="377.89" y2="418.5"><stop style="stop-color: #06b6d4;stop-opacity: 1" offset="0%"></stop><stop style="stop-color: #67e8f9;stop-opacity: 1" offset="100%"></stop></linearGradient></defs><g><g><use xlink:href="#aFZf6T5ED" opacity="1" fill="url(#gradientb2ThqnP5Op)"></use></g><g><use xlink:href="#a9fehgwfM" opacity="1" fill="url(#gradientk1wNV9Ostb)"></use></g></g></svg>
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  strokeLinecap="round"
+  strokeLinejoin="round"
+  strokeMiterlimit="10"
+  clipRule="evenodd"
+  viewBox="0 0 1024 1024"
+  width="50"
+  height="45"
+>
+  <g>
+    <path
+      fill="#01befe"
+      stroke="#01befe"
+      strokeLinecap="butt"
+      strokeWidth="0.1"
+      d="M454.374 416.794l337.672-258.493 177.123-135.59 25.328 54.02-370.173 284.014-169.952 130.396.002-74.347z"
+    ></path>
+    <path
+      fill="#23d4fe"
+      stroke="#23d4fe"
+      strokeLinecap="butt"
+      strokeWidth="0.1"
+      d="M454.258 489.238l491.121-375.96 25.328 54.019-516.182 395.966-.267-74.025z"
+    ></path>
+    <path
+      fill="#43e8fe"
+      stroke="#43e8fe"
+      strokeLinecap="butt"
+      strokeWidth="0.1"
+      d="M454.533 562.024l470.042-359.823 25.328 54.019-495.419 379.898.049-74.094z"
+    ></path>
+    <path fill="currentColor" d="M473.219 81.125c-10.259 0-18.594 8.335-18.594 18.594v268.719l167.281-128.063V99.719c0-10.259-8.335-18.594-18.594-18.594H473.219zm148.687 471.969L450.344 684.625c-12.704 46.182-52.672 82.061-102.188 84-63.873 2.49-116.5-48.115-116.5-111.375 0-10.258-8.335-18.562-18.594-18.562H82.969c-10.389 0-18.613 8.548-18.594 18.937.204 143.283 125.171 259.813 278.75 259.813 153.709 0 278.781-116.719 278.781-260.188V553.094z"></path>
+  </g>
+</svg>

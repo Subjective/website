@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" strokelinecap="round" strokelinejoin="round" strokemiterlimit="10" cliprule="evenodd" viewBox="0 0 1024 1024" width="50" height="45">
+  <g>
+    <path fill="#01befe" stroke="#01befe" strokelinecap="butt" strokewidth="0.1" d="M454.374 416.794l337.672-258.493 177.123-135.59 25.328 54.02-370.173 284.014-169.952 130.396.002-74.347z"></path>
+    <path fill="#23d4fe" stroke="#23d4fe" strokelinecap="butt" strokewidth="0.1" d="M454.258 489.238l491.121-375.96 25.328 54.019-516.182 395.966-.267-74.025z"></path>
+    <path fill="#43e8fe" stroke="#43e8fe" strokelinecap="butt" strokewidth="0.1" d="M454.533 562.024l470.042-359.823 25.328 54.019-495.419 379.898.049-74.094z"></path>
+    <style>
+      path:nth-of-type(4) {
+        fill: black;
+      }
+      @media (prefers-color-scheme: dark) {
+        path:nth-of-type(4) {
+          fill: white;
+        }
+      }
+    </style>
+    <path fill="currentColor" d="M473.219 81.125c-10.259 0-18.594 8.335-18.594 18.594v268.719l167.281-128.063V99.719c0-10.259-8.335-18.594-18.594-18.594H473.219zm148.687 471.969L450.344 684.625c-12.704 46.182-52.672 82.061-102.188 84-63.873 2.49-116.5-48.115-116.5-111.375 0-10.258-8.335-18.562-18.594-18.562H82.969c-10.389 0-18.613 8.548-18.594 18.937.204 143.283 125.171 259.813 278.75 259.813 153.709 0 278.781-116.719 278.781-260.188V553.094z"></path>
+  </g>
+</svg>
