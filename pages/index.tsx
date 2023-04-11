@@ -271,7 +271,7 @@ export default function Home({ posts }: InferGetStaticPropsType<typeof getStatic
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="35"
-            height="auto"
+            height="35"
             viewBox="0 0 256 256"
             fill="currentColor"
           >
