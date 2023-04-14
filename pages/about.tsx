@@ -1,4 +1,3 @@
-// import { MDXLayoutRenderer } from '@/components/MDXComponents'
 import { InferGetStaticPropsType } from 'next'
 import { allAuthors } from 'contentlayer/generated'
 import { MDXLayoutRenderer } from 'pliny/mdx-components'
