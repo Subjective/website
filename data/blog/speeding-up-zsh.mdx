@@ -1,0 +1,157 @@
+---
+title: Speeding Up Zsh
+date: 2023-07-01T18:12:49Z
+tags: ['programming', 'guide']
+draft: false
+summary: In this post, I document the steps I took to speed up my Zsh startup times. I hope that anyone else struggling with sluggish startup times will find these optimizations helpful.
+---
+
+## Motivations
+
+Ever since I embarked on my programming journey, Zsh has been my trusty shell of choice, consistently serving me well. But as time went on and my `.zshrc` file grew longer, I couldn't help but notice that startup times have gotten slow. Unbearably slow. Well... maybe not that slow, but slow enough to be just a tad irritating.
+
+Recently, I've had a little bit too much time on my hands, so I finally decided to invest some effort into optimizing my setup. Needless to say, I'm quite happy with the results: I was able to slash Zsh's startup time down from 0.65 seconds to a _whopping_ 0.07 seconds!
+
+I hope that anyone else struggling with sluggish startup times will find these optimizations helpful.
+
+## The main culprit: `nvm`
+
+For most people, myself included, the main culprit behind sluggish startup times will be none other than `nvm`. The issue with `nvm` is that it is always loaded, leading to unnecessary slowdowns in the many instances I'm not working on a node project. Thus, the natural solution would be to only lazy load it when needed.
+
+### Lazy loading `nvm`
+
+There are several ways to lazy load nvm, such as [zsh-nvm](https://github.com/lukechilds/zsh-nvm), but I've personally found the [nvm](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/nvm) plugin bundled with `Oh My Zsh` to be the fastest and easiest to configure. Just add the following lines to your `.zshrc` to enable lazy loading:
+
+```shell:.zshrc
+plugins += (nvm)
+# add the following before Oh My Zsh is sourced
+zstyle ':omz:plugins:nvm' lazy yes
+```
+
+### Or just use `fnm` instead?
+
+[fnm](https://github.com/Schniz/fnm) is a lightweight alternative to nvm, written in rust. Like `nvm`, it manages your node versions, but is much faster, with almost no effect on shell loading times. I'd highly recommend checking `fnm` out if there isn't a specific feature of `nvm` that you need, or if you don't like the idea of installing a plugin or writing a script to lazy load `nvm`.
+
+## Other Virtual Environments
+
+While `nvm` was certainly the main cause of slowdown, other virtual environments contribute to startup times as well. These typically work by running an eval statement in your `.zshrc` file:
+
+```shell:.zshrc
+eval "$(rbenv init -)"
+eval "$(pyenv init -)"
+```
+
+As it turns out, the output of the eval statement is almost always static, so it often isn't necessary to compute every time. Instead, we can cache the result on the first run so that the overhead in recomputing it can be avoided during subsequent runs.
+
+### Caching evals
+
+To cache evals, install the amazing [evalcache](https://github.com/mroth/evalcache) plugin. Now, simply replace all instances of `eval` with `_evalcache`:
+
+```shell:.zshrc
+_evalcache pyenv init -
+_evalcache rbenv init -
+```
+
+Note that a minor caveat to caching is that whenever you update your virtual environments, you may need to manually recache the results by running `_evalcache_clear`.
+
+By now, your shell startup time should be vastly improved. However, there's still more that can be done!
+
+## Alternative plugin managers
+
+For the longest time, I've been content with the popular [Oh My Zsh](https://github.com/ohmyzsh/ohmyzsh) framework. When conducting a quick internet search for customizing Zsh and installing plugins, `Oh My Zsh` is typically the first thing that comes up, and rightfully so — it's easy to set up and comes with a large library of plugins out of the box. But over time, I've started to realize that its comprehensive set of features and ease of use comes at a slight performance cost. `Oh My Zsh` has been around for a long time and has inevitably begun to show its age. It's old, bloated, and widely known to be slow.
+
+If only there was a way to have speed without sacrificing functionality...
+
+### `Zim`: A modern alternative to `Oh My Zsh`
+
+[Zim](https://github.com/zimfw/zimfw) is a _blazingly_ fast plugin manager that aims to solve all these issues and more, while also providing a sensible set of defaults and full support for the `Oh My Zsh` and `Prezto` plugin libraries. Moreover, it automatically installs and updates custom plugins via a `.zimrc` file. No more manually running `git clone` each time you reinstall your shell!
+
+It's worth mentioning that there are many alternative Zsh frameworks and plugin managers, like [Prezto](https://github.com/sorin-ionescu/prezto/), [antigen](https://github.com/zsh-users/antigen), [zgen](https://github.com/tarjoilija/zgen), [zplug](https://github.com/zplug/zplug), etc. However, I prefer `Zim` as it provides many useful features and sane defaults without compromising on performance, and crucially, is still being maintained to this day.
+
+Migrating from `Oh My Zsh` to `Zim` was a fairly straightforward process. I just followed the handy [installation guide](https://github.com/zimfw/zimfw/blob/master/README.md#installation) and added the plugins I wanted to my `.zimrc` file. For anyone seeking a practical example, feel free to explore my [dotfiles](https://github.com/Subjective/dotfiles) repository.
+
+### What about `zinit`?
+
+Before stumbling across `Zim`, I also looked into [zinit](https://github.com/zdharma-continuum/zinit), another performance-centric plugin manager that provides an innovative way to asynchronously load plugins via its turbo mode in addition to still being actively maintained. While `zinit` does offer a lot in terms of customizability, I personally found `zinit` too cumbersome to configure and get turbo mode working correctly, for what seemed like only minimal performance gains over `Zim`.
+
+## Async execution with `Zsh-defer`
+
+Turns out turbo mode isn't necessarily a feature exclusive to zinit. [Zsh-defer](https://github.com/romkatv/zsh-defer), as the name implies, is a plugin that allows you to defer the execution of a Zsh command until Zsh has nothing else to do and is waiting for user input. To install the plugin, add the following line to your `.zimrc` file:
+
+```shell:.zimrc
+zmodule romkatv/zsh-defer -d
+```
+
+Then source the plugin and add `zsh-defer` before any statement you want to defer:
+
+```shell:.zshrc
+source ${ZIM_HOME}/modules/zsh-defer/zsh-defer.plugin.zsh
+
+zsh-defer _evalcache fnm env --use-on-cd
+zsh-defer _evalcache pyenv init -
+zsh-defer _evalcache rbenv init -
+zsh-defer _evalcache zoxide init zsh
+```
+
+## Powerline10k Instant Prompt
+
+[Powerline10k](https://github.com/romkatv/powerlevel10k) is a popular prompt that is both performant and high-customizable. For our purposes, we are interested in its Instant Prompt feature, which displays the shell prompt before Zsh finishes starting up. While this doesn't actually eliminate startup lag, it gives the appearance of doing so by immediately showing the text for the shell prompt instead of waiting until after Zsh starts up. Personally, with the above optimizations, my shell startup is so fast that the difference is barely perceptible, but for other configurations, `Powerline10k` may improve the visual lag.
+
+To install the plugin, add the following line to your `.zimrc` file:
+
+```shell:.zimrc
+zmodule romkatv/powerlevel10k
+```
+
+Then enable the instant prompt and source your `Powerline10k` configuration:
+
+```shell:.zshrc
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+```
+
+## Summary
+
+All in all, I was able to reduce my Zsh's startup time by roughly 90%. The table below summarizes my results in more detail:
+
+| Configuration                      | Average Startup Time |
+| ---------------------------------- | -------------------- |
+| ohmyzsh                            | 0.65 s               |
+| ohmyzsh+lazy loading nvm           | 0.43 s               |
+| ohmyzsh+lazy loading nvm+evalcache | 0.35 s               |
+| ohmyzsh+fnm+evalcache              | 0.35 s               |
+| zim                                | 0.45 s               |
+| zim+lazy loading nvm               | 0.29 s               |
+| zim+fnm                            | 0.27 s               |
+| zim+fnm+evalcache                  | 0.19 s               |
+| zim+fnm+zsh-defer                  | 0.17 s               |
+| zim+fnm+evalcache+zsh-defer        | 0.07 s               |
+
+To measure the startup time, I used the following shell function, and captured the average time over 10 iterations:
+
+```shell
+# function to gauge zsh's startup time
+function timezsh() {
+  shell=${1-$SHELL}
+  for i in $(seq 1 10); do /usr/bin/time $shell -i -c exit; done
+}
+```
+
+As you can see, we were able to achieve stellar gains in performance while keeping all the same tools and commands. We did this by:
+
+- Lazy loading `nvm` or switching to `fnm`
+- Caching the results of eval statements with the `evalcache` plugin
+- Deferring the execution of evals with the `Zsh-defer` plugin
+- Migrating from `Oh My Zsh` to `Zim`
+
+## Helpful Resources
+
+I found the following resources particularly helpful while working on this. I would like to express my gratitude to the authors for sharing their insights:
+
+- [Speeding Up My Shell (Oh My Zsh)](https://blog.mattclemente.com/2020/06/26/oh-my-zsh-slow-to-load/#it's-probably-nvm)
+- [Zsh Frameworks](https://www.reddit.com/r/linuxadmin/comments/rhg7wx/zsh_frameworks/)
+- [A Comparison of Zsh Frameworks and Plugin Managers](https://gist.github.com/laggardkernel/4a4c4986ccdcaf47b91e8227f9868ded)
