@@ -3,24 +3,24 @@ title: Speeding Up Zsh
 date: 2023-07-01T18:12:49Z
 tags: ['programming', 'guide']
 draft: false
-summary: In this post, I document the steps I took to speed up my Zsh startup times. I hope that anyone else struggling with sluggish startup times will find these optimizations helpful.
+summary: In this post, I document the steps I took to speed up my Zsh startup times by more than 95%. I hope that anyone else struggling with sluggish startup times will find these optimizations helpful.
 ---
 
 ## Motivations
 
 Ever since I embarked on my programming journey, Zsh has been my trusty shell of choice, consistently serving me well. But as time went on and my `.zshrc` file grew longer, I couldn't help but notice that startup times have gotten slow. Unbearably slow. Well... maybe not that slow, but slow enough to be just a tad irritating.
 
-Recently, I've had a little bit too much time on my hands, so I finally decided to invest some effort into optimizing my setup. Needless to say, I'm quite happy with the results: I was able to slash Zsh's startup time down from 0.65 seconds to a _whopping_ 0.07 seconds!
+Recently, I've had a little bit too much time on my hands, so I finally decided to invest some effort into optimizing my setup. Needless to say, I'm quite happy with the results: I was able to slash Zsh's startup time down from 0.65 seconds to a _whopping_ 0.03 seconds!
 
 I hope that anyone else struggling with sluggish startup times will find these optimizations helpful.
 
 ## The main culprit: `nvm`
 
-For most people, myself included, the main culprit behind sluggish startup times will be none other than `nvm`. The issue with `nvm` is that it is always loaded, leading to unnecessary slowdowns in the many instances I'm not working on a node project. Thus, the natural solution would be to only lazy load it when needed.
+For most people, myself included, the main culprit behind sluggish startup times will be none other than [nvm](https://github.com/nvm-sh/nvm). The issue with `nvm` is that it is always loaded, leading to unnecessary slowdowns in the many instances I'm not working on a node project. Thus, the natural solution would be to only lazy load it when needed.
 
 ### Lazy loading `nvm`
 
-There are several ways to lazy load nvm, such as [zsh-nvm](https://github.com/lukechilds/zsh-nvm), but I've personally found the [nvm](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/nvm) plugin bundled with `Oh My Zsh` to be the fastest and easiest to configure. Just add the following lines to your `.zshrc` to enable lazy loading:
+There are several ways to lazy load `nvm`, such as [zsh-nvm](https://github.com/lukechilds/zsh-nvm), but I've personally found the [nvm plugin](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/nvm) bundled with `Oh My Zsh` to be the fastest and easiest to configure. Just add the following lines to your `.zshrc` to enable lazy loading:
 
 ```shell:.zshrc
 plugins += (nvm)
@@ -93,9 +93,58 @@ zsh-defer _evalcache rbenv init -
 zsh-defer _evalcache zoxide init zsh
 ```
 
+You can even defer plugins loaded by `Zim`! Just be careful as not all plugins are intended to be loaded this way and some may not even function properly. 
+
+```shell:.zshrc
+# Initialize zsh-defer.
+source ${ZIM_HOME}/modules/zsh-defer/zsh-defer.plugin.zsh
+
+# Install missing modules, and update ${ZIM_HOME}/init.zsh if missing or outdated.
+if [[ ! ${ZIM_HOME}/init.zsh -nt ${ZDOTDIR:-${HOME}}/.zimrc ]]; then
+  zsh-defer source ${ZIM_HOME}/zimfw.zsh init -q
+fi
+
+# Initialize modules.
+zsh-defer source ${ZIM_HOME}/init.zsh
+```
+
+By implementing this approach, I managed to reduce my Zsh startup time down to an impressive 0.02 seconds! Nevertheless, it's worth mentioning that I encountered a few issues with certain plugins. For instance, [Zsh-vim-mode](https://github.com/softmoth/zsh-vim-mode) failed to properly set the cursor style within [tmux](https://github.com/tmux/tmux), the [environment](https://github.com/zimfw/environment) module did not configure specific options, and some of my aliases got overridden by those defined in the [utility](https://github.com/zimfw/utility) module.
+
+Ideally, I would like to skip deferring those plugins in particular. Thankfully, it's not too difficult to write some shell script that accomplishes this for us.
+
+```shell:.zshrc
+# Initialize modules.
+
+# don't defer loading the following plugins
+skip_defer=(environment utility zsh-vim-mode)
+
+for zline in ${(f)"$(<$ZIM_HOME/init.zsh)"}; do
+  if [[ $zline == source* ]]; then
+    skip_source=0
+    for skip in "${skip_defer[@]}"; do
+      if [[ $zline == *"/modules/$skip/"* ]]; then
+        skip_source=1
+        break
+      fi
+    done
+    if [[ $skip_source -eq 0 ]]; then
+      zsh-defer -c "${zline}"
+    else
+      eval "${zline}"
+    fi
+  else
+    eval "${zline}"
+  fi
+done
+```
+
+Now I can provide an array `skip_defer` specifying the plugins I do not want to defer. This only brings up the startup time a tiny bit, to 0.03 seconds. Hooray!
+
+By now, your shell should be sufficiently fast, making the next option potentially unnecessary. However, if you opted out of any of the previous optimizations, then the next one could be beneficial.
+
 ## Powerline10k Instant Prompt
 
-[Powerline10k](https://github.com/romkatv/powerlevel10k) is a popular prompt that is both performant and high-customizable. For our purposes, we are interested in its Instant Prompt feature, which displays the shell prompt before Zsh finishes starting up. While this doesn't actually eliminate startup lag, it gives the appearance of doing so by immediately showing the text for the shell prompt instead of waiting until after Zsh starts up. Personally, with the above optimizations, my shell startup is so fast that the difference is barely perceptible, but for other configurations, `Powerline10k` may improve the visual lag.
+[Powerline10k](https://github.com/romkatv/powerlevel10k) is a performant and highly-customizable prompt that has become quite popular among the Zsh community. For our purposes, we are interested in its Instant Prompt feature, which displays the shell prompt before Zsh finishes starting up. While this doesn't actually eliminate startup lag, it gives the appearance of doing so by immediately showing the text for the shell prompt instead of waiting until after Zsh starts up.
 
 To install the plugin, add the following line to your `.zimrc` file:
 
@@ -116,20 +165,22 @@ fi
 
 ## Summary
 
-All in all, I was able to reduce my Zsh's startup time by roughly 90%. The table below summarizes my results in more detail:
+All in all, I was able to reduce my Zsh's startup time by more than 95%. The table below summarizes my results in more detail:
 
-| Configuration                      | Average Startup Time |
-| ---------------------------------- | -------------------- |
-| ohmyzsh                            | 0.65 s               |
-| ohmyzsh+lazy loading nvm           | 0.43 s               |
-| ohmyzsh+lazy loading nvm+evalcache | 0.35 s               |
-| ohmyzsh+fnm+evalcache              | 0.35 s               |
-| zim                                | 0.45 s               |
-| zim+lazy loading nvm               | 0.29 s               |
-| zim+fnm                            | 0.27 s               |
-| zim+fnm+evalcache                  | 0.19 s               |
-| zim+fnm+zsh-defer                  | 0.17 s               |
-| zim+fnm+evalcache+zsh-defer        | 0.07 s               |
+| Configuration                                      | Average Startup Time |
+| -------------------------------------------------- | -------------------- |
+| `ohmyzsh`                                            | 0.65 s               |
+| `ohmyzsh`+lazy loading `nvm`                           | 0.43 s               |
+| `ohmyzsh`+lazy loading `nvm`+`evalcache`                 | 0.35 s               |
+| `ohmyzsh`+`fnm`+`evalcache`                              | 0.35 s               |
+| `zim`                                                | 0.45 s               |
+| `zim`+lazy loading `nvm`                               | 0.29 s               |
+| `zim`+`fnm`                                            | 0.27 s               |
+| `zim`+`fnm`+`evalcache`                                  | 0.19 s               |
+| `zim`+`fnm`+`zsh-defer` (evals)                          | 0.17 s               |
+| `zim`+`fnm`+`evalcache`+`zsh-defer` (evals)                | 0.07 s               |
+| `zim`+`fnm`+`evalcache`+`zsh-defer` (evals & most plugins) | 0.03 s               |
+| `zim`+`fnm`+`evalcache`+`zsh-defer` (evals & all plugins)  | 0.02 s               |
 
 To measure the startup time, I used the following shell function, and captured the average time over 10 iterations:
 
@@ -145,7 +196,7 @@ As you can see, we were able to achieve stellar gains in performance while keepi
 
 - Lazy loading `nvm` or switching to `fnm`
 - Caching the results of eval statements with the `evalcache` plugin
-- Deferring the execution of evals with the `Zsh-defer` plugin
+- Deferring the execution of evals and plugins with the `Zsh-defer` plugin
 - Migrating from `Oh My Zsh` to `Zim`
 
 ## Helpful Resources
