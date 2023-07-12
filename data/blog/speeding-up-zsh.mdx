@@ -54,6 +54,16 @@ _evalcache rbenv init -
 
 Note that a minor caveat to caching is that whenever you update your virtual environments, you may need to manually recache the results by running `_evalcache_clear`.
 
+### RTX: The end-all solution
+
+If you don't have an attachment to any particular virtual environment tool, then it might be worth trying out [RTX](https://github.com/jdxcode/rtx). While still a fairly young project, it promises to replace the need for all existing language environment tools like `nvm` by offering a single interface to manage them all. The best part is that it's fully backwards-compatible with legacy language-specific files like `.nvmrc` or `.python-version`, meaning that you can literally use it as a drop-in replacement in existing projects. `RTX` is actually based on an older project [asdf](https://github.com/asdf-vm/asdf) with similar goals, but offers many advantages, including being written in rust and not being reliant on shims, making it much faster than `asdf`.
+
+Once you have it installed, you can initialize it on startup by adding the following to your `.zshrc`:
+
+```shell:.zshrc
+_evalcache rtx activate zsh
+```
+
 By now, your shell startup time should be vastly improved. However, there's still more that can be done!
 
 ## Alternative plugin managers
