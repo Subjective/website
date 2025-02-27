@@ -31,7 +31,7 @@ export default function Projects() {
         </div>
         <div className="container py-12">
           <h3 className="mb-4 text-3xl font-extrabold leading-9 tracking-tight text-gray-900 dark:text-gray-100">
-            Side Projects
+            Repositories
           </h3>
           <div className="-m-4 flex flex-wrap">
             {sideProjects.map((project) => (
