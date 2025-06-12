@@ -11,6 +11,14 @@ export interface Project {
 const projectsData: Project[] = [
   {
     type: 'desc',
+    title: 'Curriculum Cross-Modal Transfer Learning for Imagined Speech Reconstruction from sEEG',
+    description:
+      'A novel cross-modal transfer learning technique for reconstructing imagined speech from stereotactic EEG recordings.',
+    imgSrc: '/static/images/brain.jpg',
+    url: '/static/documents/curriculum-cross-modal-transfer-learning-for-imagined-speech-reconstruction-from-seeg.pdf',
+  },
+  {
+    type: 'desc',
     title: 'Bailar Code Review',
     description:
       "A highly configurable generative AI code reviewer integrated into Amazon's internal code review system, capable of commenting feedback, refactoring code, and generating documentation.",
