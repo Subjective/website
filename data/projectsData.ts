@@ -11,6 +11,15 @@ export interface Project {
 const projectsData: Project[] = [
   {
     type: 'desc',
+    title:
+      'Text2Texture: Generating 3D-Printed Models with Textures based on Text and Image Prompts',
+    description:
+      'A pipeline for generating 3D-printed models with textures from text and image prompts, enabling rapid prototyping of textured objects. (UIST 2025)',
+    imgSrc: '/static/images/text2texture-blender.png',
+    url: '/static/documents/text2texture-generating-3d-printed-models-with-textures.pdf',
+  },
+  {
+    type: 'desc',
     title: 'Curriculum Cross-Modal Transfer Learning for Imagined Speech Reconstruction from sEEG',
     description:
       'A novel cross-modal transfer learning technique for reconstructing imagined speech from stereotactic EEG recordings.',
@@ -66,8 +75,8 @@ const projectsData: Project[] = [
   {
     type: 'repo',
     title: 'Text2Texture',
-    imgSrc: '/static/images/text2texture.png',
-    repo: 'generative-design-pipeline',
+    imgSrc: '/static/images/text2texture-ui.png',
+    repo: 'text2texture',
   },
   {
     type: 'repo',
