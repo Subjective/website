@@ -74,6 +74,18 @@ const projectsData: Project[] = [
   },
   {
     type: 'repo',
+    title: 'Hyperion',
+    imgSrc: '/static/images/hyperion.png',
+    repo: 'hyperion',
+  },
+  {
+    type: 'repo',
+    title: 'Watch Together',
+    imgSrc: '/static/images/watch-together.png',
+    repo: 'watch-together',
+  },
+  {
+    type: 'repo',
     title: 'Text2Texture',
     imgSrc: '/static/images/text2texture-ui.png',
     repo: 'text2texture',
