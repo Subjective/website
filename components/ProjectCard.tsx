@@ -21,7 +21,7 @@ const ProjectCard = ({ project }: ProjectCardProps) => {
 
   return (
     <ScrollAnimationWrapper
-      animateInitial={true}
+      animateInitial={false}
       animateInitialUp={true}
       className="md max-w-[544px] p-4 md:w-1/2"
     >
