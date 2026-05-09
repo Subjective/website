@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useLayoutEffect, useRef } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { motion, useAnimationControls, useReducedMotion } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
 
@@ -36,6 +36,8 @@ const ScrollAnimationWrapper = ({
   const measuredInitialViewport = useRef(false)
   const initiallyVisible = useRef(false)
   const hasRevealed = useRef(false)
+  const preparedForReveal = useRef(false)
+  const [showImmediately, setShowImmediately] = useState(disabled)
 
   const combinedRef = useCallback(
     (node: HTMLDivElement | null) => {
@@ -45,6 +47,11 @@ const ScrollAnimationWrapper = ({
     [ref]
   )
 
+  const showElement = useCallback(() => {
+    setShowImmediately(true)
+    controls.set({ opacity: 1, y: 0 })
+  }, [controls])
+
   useIsomorphicLayoutEffect(() => {
     const element = elementRef.current
 
@@ -53,8 +60,9 @@ const ScrollAnimationWrapper = ({
     }
 
     if (disabled || shouldReduceMotion) {
-      controls.set({ opacity: 1, y: 0 })
+      showElement()
       hasRevealed.current = true
+      preparedForReveal.current = false
       return
     }
 
@@ -66,13 +74,15 @@ const ScrollAnimationWrapper = ({
     measuredInitialViewport.current = true
 
     if (startsInViewport && !animateInitial) {
-      controls.set({ opacity: 1, y: 0 })
+      showElement()
       hasRevealed.current = true
+      preparedForReveal.current = false
       return
     }
 
     controls.set({ opacity: initialOpacity, y: 0 })
-  }, [animateInitial, controls, disabled, initialOpacity, shouldReduceMotion])
+    preparedForReveal.current = true
+  }, [animateInitial, controls, disabled, initialOpacity, shouldReduceMotion, showElement])
 
   useEffect(() => {
     if (!inView || !entry || (triggerOnce && hasRevealed.current)) {
@@ -80,8 +90,9 @@ const ScrollAnimationWrapper = ({
     }
 
     if (disabled || shouldReduceMotion) {
-      controls.set({ opacity: 1, y: 0 })
+      showElement()
       hasRevealed.current = true
+      preparedForReveal.current = false
       return
     }
 
@@ -91,7 +102,14 @@ const ScrollAnimationWrapper = ({
     }
 
     if (initiallyVisible.current && !animateInitial) {
-      controls.set({ opacity: 1, y: 0 })
+      showElement()
+      hasRevealed.current = true
+      preparedForReveal.current = false
+      return
+    }
+
+    if (!preparedForReveal.current) {
+      showElement()
       hasRevealed.current = true
       return
     }
@@ -123,14 +141,15 @@ const ScrollAnimationWrapper = ({
     initialOpacity,
     inView,
     shouldReduceMotion,
+    showElement,
     triggerOnce,
     yDistance,
   ])
 
   return (
     <motion.div
-      initial={false}
-      animate={controls}
+      initial={disabled ? false : { opacity: initialOpacity, y: 0 }}
+      animate={showImmediately ? { opacity: 1, y: 0, transition: { duration: 0 } } : controls}
       layout={layout}
       ref={combinedRef}
       className={className}
