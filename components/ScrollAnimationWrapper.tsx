@@ -1,32 +1,8 @@
-import { useCallback, useEffect, useRef } from 'react'
-import { motion, useAnimate } from 'framer-motion'
+import { useCallback, useEffect, useLayoutEffect, useRef } from 'react'
+import { motion, useAnimationControls, useReducedMotion } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
 
-const useSyncRefs = (
-  ...refs: (React.MutableRefObject<Element> | ((instance: Element) => void) | null)[]
-) => {
-  const cache = useRef(refs)
-
-  useEffect(() => {
-    cache.current = refs
-  }, [refs])
-
-  return useCallback(
-    (value: Element) => {
-      for (const ref of cache.current) {
-        if (ref == null) {
-          continue
-        }
-        if (typeof ref === 'function') {
-          ref(value)
-        } else {
-          ref.current = value
-        }
-      }
-    },
-    [cache]
-  )
-}
+const useIsomorphicLayoutEffect = typeof window === 'undefined' ? useEffect : useLayoutEffect
 
 interface ScrollAnimationWrapperProps {
   threshold?: number
@@ -37,6 +13,8 @@ interface ScrollAnimationWrapperProps {
   animateInitial?: boolean
   animateInitialUp?: boolean
   initialOpacity?: number
+  disabled?: boolean
+  layout?: boolean | 'position' | 'size' | 'preserve-aspect'
 }
 
 const ScrollAnimationWrapper = ({
@@ -48,71 +26,115 @@ const ScrollAnimationWrapper = ({
   animateInitial = true,
   animateInitialUp = false,
   initialOpacity = 0,
+  disabled = false,
+  layout = false,
 }: ScrollAnimationWrapperProps): JSX.Element => {
   const [ref, inView, entry] = useInView({ threshold, triggerOnce })
-  const [scope, animate] = useAnimate()
-  const initiallyVisible = useRef<[boolean, boolean]>([false, false])
+  const controls = useAnimationControls()
+  const shouldReduceMotion = useReducedMotion()
+  const elementRef = useRef<HTMLDivElement | null>(null)
+  const measuredInitialViewport = useRef(false)
+  const initiallyVisible = useRef(false)
+  const hasRevealed = useRef(false)
 
-  const combinedRef = useSyncRefs(scope, ref)
+  const combinedRef = useCallback(
+    (node: HTMLDivElement | null) => {
+      elementRef.current = node
+      ref(node)
+    },
+    [ref]
+  )
 
-  const animateElement = (
-    yTranslationVector: Array<number>,
-    duration = 0.5,
-    transition: Array<number> = [0, 1]
-  ) => {
-    animate(
-      scope.current,
-      {
-        opacity: transition,
-        y: yTranslationVector,
-      },
-      { duration: duration, ease: 'easeOut' }
-    )
-  }
+  useIsomorphicLayoutEffect(() => {
+    const element = elementRef.current
+
+    if (!element) {
+      return
+    }
+
+    if (disabled || shouldReduceMotion) {
+      controls.set({ opacity: 1, y: 0 })
+      hasRevealed.current = true
+      return
+    }
+
+    const rect = element.getBoundingClientRect()
+    const viewportHeight = window.innerHeight || document.documentElement.clientHeight
+    const startsInViewport = rect.top < viewportHeight && rect.bottom > 0
+
+    initiallyVisible.current = startsInViewport
+    measuredInitialViewport.current = true
+
+    if (startsInViewport && !animateInitial) {
+      controls.set({ opacity: 1, y: 0 })
+      hasRevealed.current = true
+      return
+    }
+
+    controls.set({ opacity: initialOpacity, y: 0 })
+  }, [animateInitial, controls, disabled, initialOpacity, shouldReduceMotion])
 
   useEffect(() => {
-    if (entry) {
-      if (!initiallyVisible[0]) {
-        if (entry.isIntersecting) {
-          initiallyVisible[1] = true
-          // console.log('setting initially visible')
-        }
-        initiallyVisible[0] = true
-      }
+    if (!inView || !entry || (triggerOnce && hasRevealed.current)) {
+      return
     }
-  }, [entry])
 
-  useEffect(() => {
-    if (inView) {
-      const bottomInView: boolean = entry.boundingClientRect.bottom <= entry.rootBounds.height
-      const topInView: boolean =
-        entry.boundingClientRect.top >= 0 && entry.boundingClientRect.top <= entry.rootBounds.height
-      if (topInView) {
-        // console.log('top in view!')
-      }
-      if (bottomInView) {
-        // console.log('bottom in view!')
-      }
-
-      if (initiallyVisible[1]) {
-        if (animateInitial) {
-          // console.log('Initial animation!')
-          animateInitialUp ? animateElement([yDistance, 0]) : animateElement([-yDistance, 0])
-        } else {
-          animateElement([0, 0], 0, [0, 1])
-        }
-      } else if (bottomInView) {
-        // console.log('Entering from top!')
-        animateElement([-yDistance, 0])
-      } else {
-        // console.log('Entering from bottom!')
-        animateElement([yDistance, 0])
-      }
+    if (disabled || shouldReduceMotion) {
+      controls.set({ opacity: 1, y: 0 })
+      hasRevealed.current = true
+      return
     }
-  }, [inView])
+
+    if (!measuredInitialViewport.current) {
+      initiallyVisible.current = entry.isIntersecting
+      measuredInitialViewport.current = true
+    }
+
+    if (initiallyVisible.current && !animateInitial) {
+      controls.set({ opacity: 1, y: 0 })
+      hasRevealed.current = true
+      return
+    }
+
+    const viewportHeight =
+      entry.rootBounds?.height || window.innerHeight || document.documentElement.clientHeight
+    const enteringFromTop = entry.boundingClientRect.bottom <= viewportHeight
+    const yStart = initiallyVisible.current
+      ? animateInitialUp
+        ? yDistance
+        : -yDistance
+      : enteringFromTop
+      ? -yDistance
+      : yDistance
+
+    hasRevealed.current = true
+    controls.set({ opacity: initialOpacity, y: yStart })
+    controls.start({
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.5, ease: 'easeOut' },
+    })
+  }, [
+    animateInitial,
+    animateInitialUp,
+    controls,
+    disabled,
+    entry,
+    initialOpacity,
+    inView,
+    shouldReduceMotion,
+    triggerOnce,
+    yDistance,
+  ])
 
   return (
-    <motion.div initial={{ opacity: initialOpacity }} ref={combinedRef} className={className}>
+    <motion.div
+      initial={false}
+      animate={controls}
+      layout={layout}
+      ref={combinedRef}
+      className={className}
+    >
       {children}
     </motion.div>
   )
