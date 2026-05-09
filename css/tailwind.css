@@ -4,6 +4,7 @@
 
 html {
   scroll-padding-top: 5rem; /* height of sticky header */
+  scrollbar-gutter: stable;
 }
 
 /* hamburger menu button: https://css-tricks.com/line-animated-hamburger-menu/ */
