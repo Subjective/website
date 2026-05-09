@@ -107,7 +107,7 @@ export default function Home({ posts }: InferGetStaticPropsType<typeof getStatic
   useScrollToTopOrBottom(buttonRef, latestRef, 600)
 
   const BlogListItem = ({ slug, title, tags, summary, date, siteMetadata }) => (
-    <ScrollAnimationWrapper>
+    <ScrollAnimationWrapper animateInitial={false}>
       <li>
         <article>
           <ClickableCard
