@@ -190,7 +190,7 @@ export default function ListLayout({
                 }`}
                 aria-pressed={!activeTag}
               >
-                All <span className="ml-1 text-gray-600 dark:text-gray-300">{posts.length}</span>
+                All <span className="text-gray-600 dark:text-gray-300">({posts.length})</span>
               </button>
               {sortedTags.map((tag) => {
                 const tagSlug = kebabCase(tag)
@@ -208,7 +208,7 @@ export default function ListLayout({
                     aria-pressed={isActive}
                   >
                     {tag.split(' ').join('-')}{' '}
-                    <span className="text-gray-600 dark:text-gray-300">{tagCounts[tag]}</span>
+                    <span className="text-gray-600 dark:text-gray-300">({tagCounts[tag]})</span>
                   </button>
                 )
               })}
