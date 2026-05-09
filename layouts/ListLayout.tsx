@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/router'
 import { formatDate } from 'pliny/utils/formatDate'
+import { kebabCase } from 'pliny/utils/kebabCase'
 import { CoreContent } from 'pliny/utils/contentlayer'
 import type { Blog } from 'contentlayer/generated'
 import Link from '@/components/Link'
@@ -18,6 +19,7 @@ interface ListLayoutProps {
   title: string
   initialDisplayPosts?: CoreContent<Blog>[]
   pagination?: PaginationProps
+  tagCounts?: Record<string, number>
 }
 
 function Pagination({ totalPages, currentPage }: PaginationProps) {
@@ -65,16 +67,45 @@ export default function ListLayout({
   title,
   initialDisplayPosts = [],
   pagination,
+  tagCounts,
 }: ListLayoutProps) {
+  const router = useRouter()
   const [searchValue, setSearchValue] = useState('')
+  const activeTag =
+    typeof router.query.tag === 'string'
+      ? router.query.tag
+      : router.asPath.match(/[?&]tag=([^&]+)/)?.[1] || ''
+
+  const sortedTags = tagCounts
+    ? Object.keys(tagCounts).sort((a, b) => tagCounts[b] - tagCounts[a] || a.localeCompare(b))
+    : []
+
   const filteredBlogPosts = posts.filter((post) => {
     const searchContent = post.title + post.summary + post.tags.join(' ')
-    return searchContent.toLowerCase().includes(searchValue.toLowerCase())
+    const matchesSearch = searchContent.toLowerCase().includes(searchValue.toLowerCase())
+    const matchesTag = activeTag
+      ? post.tags.some((tag) => kebabCase(tag) === decodeURIComponent(activeTag))
+      : true
+    return matchesSearch && matchesTag
   })
 
   // If initialDisplayPosts exist, display it if no searchValue is specified
   const displayPosts =
-    initialDisplayPosts.length > 0 && !searchValue ? initialDisplayPosts : filteredBlogPosts
+    initialDisplayPosts.length > 0 && !searchValue && !activeTag
+      ? initialDisplayPosts
+      : filteredBlogPosts
+
+  const updateActiveTag = (tag?: string) => {
+    const query = { ...router.query }
+
+    if (tag) {
+      query.tag = tag
+    } else {
+      delete query.tag
+    }
+
+    router.push({ pathname: '/blog', query }, undefined, { shallow: true, scroll: false })
+  }
 
   const BlogListItem = ({ path, title, tags, summary, date, siteMetadata }) => (
     <li>
@@ -148,9 +179,45 @@ export default function ListLayout({
               />
             </svg>
           </div>
+          {tagCounts && sortedTags.length > 0 && (
+            <div className="flex max-w-3xl flex-wrap gap-2 pt-1" aria-label="Filter posts by tag">
+              <button
+                type="button"
+                onClick={() => updateActiveTag()}
+                className={`rounded-2xl px-3 py-1 text-sm font-semibold uppercase transition-colors ${
+                  !activeTag
+                    ? 'bg-gray-200 text-gray-900 dark:bg-gray-700 dark:text-gray-100'
+                    : 'text-primary-500 hover:bg-gray-100 hover:text-primary-600 dark:hover:bg-gray-800 dark:hover:text-primary-400'
+                }`}
+                aria-pressed={!activeTag}
+              >
+                All <span className="ml-1 text-gray-600 dark:text-gray-300">{posts.length}</span>
+              </button>
+              {sortedTags.map((tag) => {
+                const tagSlug = kebabCase(tag)
+                const isActive = activeTag === tagSlug
+                return (
+                  <button
+                    key={tag}
+                    type="button"
+                    onClick={() => updateActiveTag(isActive ? undefined : tagSlug)}
+                    className={`rounded-2xl px-3 py-1 text-sm font-semibold uppercase transition-colors ${
+                      isActive
+                        ? 'bg-gray-200 text-gray-900 dark:bg-gray-700 dark:text-gray-100'
+                        : 'text-primary-500 hover:bg-gray-100 hover:text-primary-600 dark:hover:bg-gray-800 dark:hover:text-primary-400'
+                    }`}
+                    aria-pressed={isActive}
+                  >
+                    {tag.split(' ').join('-')}{' '}
+                    <span className="text-gray-600 dark:text-gray-300">{tagCounts[tag]}</span>
+                  </button>
+                )
+              })}
+            </div>
+          )}
         </div>
         <ul className="pt-8">
-          {!filteredBlogPosts.length && 'No posts found.'}
+          {!displayPosts.length && 'No posts found.'}
           {displayPosts.map((post) => {
             const { path, date, title, summary, tags } = post
             return (
@@ -161,7 +228,7 @@ export default function ListLayout({
           })}
         </ul>
       </div>
-      {pagination && pagination.totalPages > 1 && !searchValue && (
+      {pagination && pagination.totalPages > 1 && !searchValue && !activeTag && (
         <Pagination currentPage={pagination.currentPage} totalPages={pagination.totalPages} />
       )}
     </>
