@@ -41,7 +41,7 @@ function useScrollToTopOrBottom(
   jumpRef?: React.RefObject<HTMLElement>,
   timeout = 1000
 ) {
-  const scrollTimeout = useRef<NodeJS.Timeout>()
+  const scrollTimeout = useRef<NodeJS.Timeout>(undefined)
 
   useEffect(() => {
     const handleScroll = () => {
@@ -102,8 +102,8 @@ export default function Home({ posts }: InferGetStaticPropsType<typeof getStatic
     await console.log(container)
   }, [])
 
-  const latestRef = useRef<HTMLHeadingElement>()
-  const buttonRef = useRef<HTMLButtonElement>()
+  const latestRef = useRef<HTMLHeadingElement>(null)
+  const buttonRef = useRef<HTMLButtonElement>(null)
   useScrollToTopOrBottom(buttonRef, latestRef, 600)
 
   const BlogListItem = ({ slug, title, tags, summary, date, siteMetadata }) => (
