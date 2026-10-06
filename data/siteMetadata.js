@@ -11,7 +11,7 @@ const siteMetadata = {
   siteUrl: 'https://joshyin.cc',
   siteRepo: 'https://github.com/Subjective/website',
   siteLogo: '/static/images/logo.png',
-  image: '/static/images/avatar.png',
+  image: '/static/images/avatar.jpg',
   socialBanner: '/static/images/twitter-card.png',
   email: 'josh@joshyin.cc',
   github: 'https://github.com/Subjective',
