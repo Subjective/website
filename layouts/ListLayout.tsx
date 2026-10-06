@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/router'
 import { formatDate } from 'pliny/utils/formatDate'
-import { kebabCase } from 'pliny/utils/kebabCase'
+import { slug } from 'github-slugger'
 import { CoreContent } from 'pliny/utils/contentlayer'
 import type { Blog } from 'contentlayer/generated'
 import Link from '@/components/Link'
@@ -84,7 +84,7 @@ export default function ListLayout({
     const searchContent = post.title + post.summary + post.tags.join(' ')
     const matchesSearch = searchContent.toLowerCase().includes(searchValue.toLowerCase())
     const matchesTag = activeTag
-      ? post.tags.some((tag) => kebabCase(tag) === decodeURIComponent(activeTag))
+      ? post.tags.some((tag) => slug(tag) === decodeURIComponent(activeTag))
       : true
     return matchesSearch && matchesTag
   })
@@ -193,7 +193,7 @@ export default function ListLayout({
                 All <span className="text-gray-600 dark:text-gray-300">({posts.length})</span>
               </button>
               {sortedTags.map((tag) => {
-                const tagSlug = kebabCase(tag)
+                const tagSlug = slug(tag)
                 const isActive = activeTag === tagSlug
                 return (
                   <button

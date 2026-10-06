@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { kebabCase } from 'pliny/utils/kebabCase'
+import { slug } from 'github-slugger'
 
 interface Props {
   text: string
@@ -8,7 +8,7 @@ interface Props {
 const Tag = ({ text }: Props) => {
   return (
     <Link
-      href={`/blog?tag=${kebabCase(text)}`}
+      href={`/blog?tag=${slug(text)}`}
       className="mr-3 text-sm font-medium uppercase text-primary-500 hover:text-primary-600 dark:hover:text-primary-400"
       onClick={(e) => {
         e.stopPropagation()
