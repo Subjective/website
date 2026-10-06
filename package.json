@@ -12,7 +12,6 @@
   },
   "dependencies": {
     "@next/bundle-analyzer": "^14.2.35",
-    "@next/font": "13.1.6",
     "@octokit/graphql": "^5.0.5",
     "@tailwindcss/forms": "^0.5.3",
     "@tailwindcss/typography": "^0.5.9",
