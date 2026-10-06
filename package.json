@@ -8,7 +8,8 @@
     "build": "cross-env INIT_CWD=$PWD next build --webpack && cross-env NODE_OPTIONS='--experimental-json-modules' node -r esbuild-register ./scripts/postbuild.mjs",
     "serve": "next start",
     "analyze": "cross-env ANALYZE=true next build --webpack",
-    "lint": "eslint --fix pages components layouts scripts"
+    "lint": "eslint --fix pages components layouts scripts",
+    "prepare": "husky"
   },
   "dependencies": {
     "@next/bundle-analyzer": "^16.4.0",
@@ -67,7 +68,7 @@
     "file-loader": "^6.0.0",
     "globals": "^17.13.0",
     "globby": "11.0.3",
-    "husky": "^8.0.0",
+    "husky": "^9.1.7",
     "js-yaml": "4.1.0",
     "lint-staged": "^13.0.0",
     "prettier": "^2.7.0",
