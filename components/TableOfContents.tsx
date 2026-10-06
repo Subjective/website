@@ -1,7 +1,7 @@
 import React from 'react'
 import Link from 'next/link'
 import useActiveAnchor from 'hooks/useActiveAnchor'
-import { Toc } from 'pliny/mdx-plugins/remark-toc-headings'
+import { Toc } from 'pliny/mdx-plugins/remark-toc-headings.js'
 
 export interface Heading {
   text: string

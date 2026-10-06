@@ -1,7 +1,7 @@
 import { InferGetStaticPropsType } from 'next'
 import { allAuthors } from 'contentlayer/generated'
-import { MDXLayoutRenderer } from 'pliny/mdx-components'
-import { coreContent } from 'pliny/utils/contentlayer'
+import { MDXLayoutRenderer } from 'pliny/mdx-components.js'
+import { coreContent } from 'pliny/utils/contentlayer.js'
 import { MDXComponents, Wrapper } from '@/components/MDXComponents'
 
 const DEFAULT_LAYOUT = 'AuthorLayout'

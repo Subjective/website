@@ -1,6 +1,6 @@
 import { useState, ReactNode } from 'react'
-import { Comments } from 'pliny/comments'
-import { CoreContent } from 'pliny/utils/contentlayer'
+import { Comments } from 'pliny/comments/index.js'
+import { CoreContent } from 'pliny/utils/contentlayer.js'
 import type { Blog, Authors } from 'contentlayer/generated'
 import Link from '@/components/Link'
 import PageTitle from '@/components/PageTitle'
@@ -10,7 +10,7 @@ import Image from '@/components/Image'
 import Tag from '@/components/Tag'
 import siteMetadata from '@/data/siteMetadata'
 import ScrollTopAndComment from '@/components/ScrollTopAndComment'
-import { Toc } from 'pliny/mdx-plugins/remark-toc-headings'
+import { Toc } from 'pliny/mdx-plugins/remark-toc-headings.js'
 import TableOfContents from '@/components/TableOfContents'
 
 const editUrl = (path) => `${siteMetadata.siteRepo}/blob/master/data/${path}`

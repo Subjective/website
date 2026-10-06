@@ -1,6 +1,6 @@
 // @ts-check
 
-/** @type {import("pliny/config").PlinyConfig } */
+/** @type {import("pliny/config.js").PlinyConfig } */
 const siteMetadata = {
   title: "Josh's Blog",
   author: 'Joshua Yin',

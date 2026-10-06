@@ -10,7 +10,7 @@ import Head from 'next/head'
 
 import siteMetadata from '@/data/siteMetadata'
 import { Analytics } from '@vercel/analytics/react'
-import { SearchProvider } from 'pliny/search'
+import { SearchProvider } from 'pliny/search/index.js'
 import LayoutWrapper from '@/components/LayoutWrapper'
 
 export default function App({ Component, pageProps }: AppProps) {

@@ -4,6 +4,8 @@ const tsParser = require('@typescript-eslint/parser')
 const globals = require('globals')
 const typescriptEslint = require('@typescript-eslint/eslint-plugin')
 const js = require('@eslint/js')
+const nextCoreWebVitals = require('eslint-config-next/core-web-vitals')
+const jsxA11y = require('eslint-plugin-jsx-a11y')
 
 const { FlatCompat } = require('@eslint/eslintrc')
 
@@ -14,6 +16,8 @@ const compat = new FlatCompat({
 })
 
 module.exports = defineConfig([
+  ...nextCoreWebVitals,
+  { rules: jsxA11y.flatConfigs.recommended.rules },
   {
     languageOptions: {
       parser: tsParser,
@@ -33,10 +37,7 @@ module.exports = defineConfig([
       'eslint:recommended',
       'plugin:@typescript-eslint/eslint-recommended',
       'plugin:@typescript-eslint/recommended',
-      'plugin:jsx-a11y/recommended',
-      'plugin:prettier/recommended',
-      'next',
-      'next/core-web-vitals'
+      'plugin:prettier/recommended'
     ),
 
     rules: {
@@ -59,6 +60,7 @@ module.exports = defineConfig([
       '@typescript-eslint/no-var-requires': 'off',
       '@typescript-eslint/ban-ts-comment': 'off',
       '@typescript-eslint/no-unused-vars': 'warn',
+      'react-hooks/set-state-in-effect': 'warn',
     },
   },
   globalIgnores(['**/node_modules']),

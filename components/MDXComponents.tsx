@@ -1,8 +1,8 @@
 import React, { ReactNode } from 'react'
 import type { MDXComponents as MDXComponentMap } from 'mdx/types'
-import TOCInline from 'pliny/ui/TOCInline'
-import Pre from 'pliny/ui/Pre'
-import BlogNewsletterForm from 'pliny/ui/BlogNewsletterForm'
+import TOCInline from 'pliny/ui/TOCInline.js'
+import Pre from 'pliny/ui/Pre.js'
+import BlogNewsletterForm from 'pliny/ui/BlogNewsletterForm.js'
 
 import AuthorLayout from '@/layouts/AuthorLayout'
 import CustomLayout from '@/layouts/CustomLayout'
