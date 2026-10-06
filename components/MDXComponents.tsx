@@ -1,4 +1,3 @@
-/* eslint-disable react/display-name */
 import React, { ReactNode } from 'react'
 import type { MDXComponents as MDXComponentMap } from 'mdx/types'
 import TOCInline from 'pliny/ui/TOCInline'

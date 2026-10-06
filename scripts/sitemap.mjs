@@ -25,7 +25,7 @@ const sitemap = async () => {
                 const path = page
                   .replace('pages/', '/')
                   .replace('public/', '/')
-                  .replace(/\.js|.tsx|.mdx|.md[^\/.]+$/, '')
+                  .replace(/\.js|.tsx|.mdx|.md[^/.]+$/, '')
                   .replace('/feed.xml', '')
                 const route = path === '/index' ? '' : path
                 return `
